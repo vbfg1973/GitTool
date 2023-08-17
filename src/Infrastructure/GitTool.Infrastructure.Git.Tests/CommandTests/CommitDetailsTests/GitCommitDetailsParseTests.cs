@@ -20,12 +20,13 @@ namespace GitTool.Infrastructure.Git.Tests.CommandTests.CommitDetailsParseTests
                 "GitLogOutput"
             };
         }
-        
+
         [Theory]
         [InlineData("linux.txt", 283)]
         [InlineData("nopCommerce.txt", 601)]
         [InlineData("dotnet-sdk.txt", 935)]
-        [InlineData("roslyn-analyzers.txt", 789)]        public void Given_GitLog_Number_Of_Commits_In_Log_Is_Correct(string fileName, int expectedCommitCount)
+        [InlineData("roslyn-analyzers.txt", 789)]
+        public void Given_GitLog_Number_Of_Commits_In_Log_Is_Correct(string fileName, int expectedCommitCount)
         {
             var pathToLog = GetPathToTestResourceFile(fileName);
             IProcessCommandRunner processCommandRunner = new FileReaderProcessRunner(pathToLog);
@@ -37,8 +38,8 @@ namespace GitTool.Infrastructure.Git.Tests.CommandTests.CommitDetailsParseTests
                 .Should()
                 .Be(expectedCommitCount);
         }
-        
-        
+
+
         [Theory]
         [ClassData(typeof(DotnetSdkGitCommitAuthors))]
         [ClassData(typeof(LinuxGitCommitAuthors))]
@@ -104,7 +105,7 @@ namespace GitTool.Infrastructure.Git.Tests.CommandTests.CommitDetailsParseTests
                 .Should()
                 .Be(messageBodySize);
         }
-        
+
         private GitCommitDetails FindGitCommitDetailsByShaId(string fileName, string shaId)
         {
             var pathToLog = GetPathToTestResourceFile(fileName);

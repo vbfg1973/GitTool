@@ -1,10 +1,10 @@
-namespace GitTool.Api.Tests;
-
-public class UnitTest1
+namespace GitTool.Api.Tests
 {
-    [Fact]
-    public void Test1()
+    public class UnitTest1
     {
-
+        [Fact]
+        public void Test1()
+        {
+        }
     }
 }

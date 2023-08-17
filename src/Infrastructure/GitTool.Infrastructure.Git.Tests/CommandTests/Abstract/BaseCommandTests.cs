@@ -8,7 +8,7 @@
         {
             DirPath = new List<string>();
         }
-        
+
         protected string GetPathToTestResourceFile(string fileName)
         {
             var newList = new List<string>(DirPath) { fileName };

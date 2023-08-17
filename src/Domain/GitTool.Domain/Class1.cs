@@ -1,5 +1,6 @@
-﻿namespace GitTool.Domain;
-public class Class1
+﻿namespace GitTool.Domain
 {
-
+    public class Class1
+    {
+    }
 }

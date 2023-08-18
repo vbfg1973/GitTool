@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Text;
 using GitTool.Infrastructure.Git.Commands.Abstract;
 
-namespace GitTool.Infrastructure.Git
+namespace GitTool.Infrastructure.Git.Commands
 {
     /// <summary>
     ///     Command runner for shelling external processes and reading back their output

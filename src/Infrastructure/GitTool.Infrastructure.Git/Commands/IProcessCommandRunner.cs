@@ -1,6 +1,6 @@
 ﻿using GitTool.Infrastructure.Git.Commands.Abstract;
 
-namespace GitTool.Infrastructure.Git
+namespace GitTool.Infrastructure.Git.Commands
 {
     public interface IProcessCommandRunner
     {

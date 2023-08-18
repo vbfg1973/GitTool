@@ -1,4 +1,5 @@
-﻿using GitTool.Infrastructure.Git.Commands.Abstract;
+﻿using GitTool.Infrastructure.Git.Commands;
+using GitTool.Infrastructure.Git.Commands.Abstract;
 
 namespace GitTool.Infrastructure.Git.Tests.Helpers
 {

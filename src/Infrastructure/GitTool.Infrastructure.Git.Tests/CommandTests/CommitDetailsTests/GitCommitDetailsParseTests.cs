@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using GitTool.Infrastructure.Git.Commands;
 using GitTool.Infrastructure.Git.Commands.CommitDetails;
 using GitTool.Infrastructure.Git.Models;
 using GitTool.Infrastructure.Git.Tests.CommandTests.Abstract;

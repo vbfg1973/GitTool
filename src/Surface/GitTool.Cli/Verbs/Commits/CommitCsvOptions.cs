@@ -2,11 +2,14 @@
 
 namespace GitTool.Cli.Verbs.Commits
 {
-    [Verb("commit")]
+    [Verb("commitcsv")]
     // ReSharper disable once ClassNeverInstantiated.Global
-    public sealed class CommitOptions
+    public sealed class CommitCsvOptions
     {
         [Option('p', nameof(RepositoryPath))]
         public string RepositoryPath { get; set; } = null!;
+
+        [Option('c', nameof(CsvFile))]
+        public string CsvFile { get; set; } = null!;
     }
 }

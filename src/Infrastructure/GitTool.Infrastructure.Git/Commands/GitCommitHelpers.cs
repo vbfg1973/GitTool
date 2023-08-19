@@ -94,11 +94,15 @@ namespace GitTool.Infrastructure.Git.Commands
         /// <returns></returns>
         public static GitAuthor ParseAuthorDetails(string authorHeader)
         {
+            // Console.WriteLine(authorHeader);
+
+            var firstIndex = authorHeader.IndexOf('<');
+            
             return new GitAuthor(
-                authorHeader.Substring(0, authorHeader.IndexOf('<') - 1),
+                authorHeader.Substring(0,  firstIndex > 0 ? firstIndex - 1 : firstIndex),
                 authorHeader.Substring(
-                    authorHeader.IndexOf('<') + 1,
-                    authorHeader.IndexOf('>') - (authorHeader.IndexOf('<') + 1)));
+                    firstIndex + 1,
+                    authorHeader.IndexOf('>') - (firstIndex + 1)));
         }
 
         /// <summary>

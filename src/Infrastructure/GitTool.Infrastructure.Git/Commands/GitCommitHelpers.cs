@@ -87,6 +87,11 @@ namespace GitTool.Infrastructure.Git.Commands
             return DateTimeOffset.ParseExact(dateTimeString, DateFormatStrings, CultureInfo.InvariantCulture);
         }
 
+        /// <summary>
+        /// Parse git author details
+        /// </summary>
+        /// <param name="authorHeader"></param>
+        /// <returns></returns>
         public static GitAuthor ParseAuthorDetails(string authorHeader)
         {
             return new GitAuthor(

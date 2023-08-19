@@ -4,12 +4,11 @@
     {
         public GitCommitDetails()
         {
-            Headers = new Dictionary<string, string>();
             Files = new List<GitFileStatus>();
             Message = string.Empty;
         }
-
-        public Dictionary<string, string> Headers { get; init; }
+    
+        public string Merge { get; set; }
         public DateTimeOffset Date { get; set; }
         public GitAuthor Author { get; set; }
         public string Sha { get; set; } = null!;
@@ -18,4 +17,5 @@
     }
 
     public record GitAuthor(string Name, string Email);
+    
 }

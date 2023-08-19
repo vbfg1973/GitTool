@@ -28,13 +28,13 @@ internal static class Program
     {
         Parser.Default
             .ParseArguments<
-                CommitOptions
+                CommitCsvOptions
             >(args)
             .WithParsed(options =>
             {
-                var verb = s_serviceProvider.GetService<CommitVerb>();
+                var verb = s_serviceProvider.GetService<CommitCsvVerb>();
 
-                verb?.Run(options);
+                verb?.Run(options).Wait();
             });
     }
 
@@ -64,7 +64,7 @@ internal static class Program
         #region Verbs
 
         s_serviceCollection
-            .AddTransient<CommitVerb>()
+            .AddTransient<CommitCsvVerb>()
             ;
 
         #endregion

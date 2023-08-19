@@ -1,4 +1,4 @@
-﻿namespace GitTool.Domain.Features.Repositories.Commands
+﻿namespace GitTool.Domain.Features.Repositories.Commands.CommitCsv
 {
     public class FileCommitDetail
     {

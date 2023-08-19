@@ -88,7 +88,7 @@ namespace GitTool.Infrastructure.Git.Commands
         }
 
         /// <summary>
-        /// Parse git author details
+        ///     Parse git author details
         /// </summary>
         /// <param name="authorHeader"></param>
         /// <returns></returns>
@@ -97,9 +97,9 @@ namespace GitTool.Infrastructure.Git.Commands
             // Console.WriteLine(authorHeader);
 
             var firstIndex = authorHeader.IndexOf('<');
-            
+
             return new GitAuthor(
-                authorHeader.Substring(0,  firstIndex > 0 ? firstIndex - 1 : firstIndex),
+                authorHeader.Substring(0, firstIndex > 0 ? firstIndex - 1 : firstIndex),
                 authorHeader.Substring(
                     firstIndex + 1,
                     authorHeader.IndexOf('>') - (firstIndex + 1)));

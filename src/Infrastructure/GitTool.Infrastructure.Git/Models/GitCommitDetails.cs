@@ -7,7 +7,7 @@
             Files = new List<GitFileStatus>();
             Message = string.Empty;
         }
-    
+
         public string Merge { get; set; }
         public DateTimeOffset Date { get; set; }
         public GitAuthor Author { get; set; }
@@ -17,5 +17,4 @@
     }
 
     public record GitAuthor(string Name, string Email);
-    
 }

@@ -4,9 +4,9 @@ using GitTool.Infrastructure.Git.Models;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace GitTool.Domain.Features.Repositories.Commands
+namespace GitTool.Domain.Features.Repositories.Commands.CommitCsv
 {
-    public class FullListOfAllCommitsFromGitHistoryToCsvHandler 
+    public class FullListOfAllCommitsFromGitHistoryToCsvHandler
         : IRequestHandler<FullListOfAllCommitsFromGitHistoryToCsv>
     {
         private readonly IGitService _gitService;
@@ -31,7 +31,7 @@ namespace GitTool.Domain.Features.Repositories.Commands
 
         private IEnumerable<FileCommitDetail> Map(GitCommitDetails gitCommitDetails)
         {
-            return gitCommitDetails.Files.Select(file => new FileCommitDetail()
+            return gitCommitDetails.Files.Select(file => new FileCommitDetail
             {
                 Sha = gitCommitDetails.Sha,
                 AuthorName = gitCommitDetails.Author.Name,

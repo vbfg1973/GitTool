@@ -1,5 +1,6 @@
 ﻿using CommandLine;
 using GitTool.Cli.Verbs.Commits;
+using GitTool.Cli.Verbs.Correlation;
 using GitTool.Domain;
 using GitTool.Infrastructure.Git;
 using Microsoft.Extensions.Configuration;
@@ -28,14 +29,22 @@ internal static class Program
     {
         Parser.Default
             .ParseArguments<
-                CommitCsvOptions
+                CommitCsvOptions, 
+                CorrelationOptions
             >(args)
-            .WithParsed(options =>
+            .WithParsed<CommitCsvOptions>(options =>
             {
                 var verb = s_serviceProvider.GetService<CommitCsvVerb>();
 
                 verb?.Run(options).Wait();
-            });
+            })
+            .WithParsed<CorrelationOptions>(options =>
+            {
+                var verb = s_serviceProvider.GetService<CorrelationVerb>();
+
+                verb?.Run(options).Wait();
+            })
+            ;
     }
 
     private static void BuildConfiguration()
@@ -58,13 +67,14 @@ internal static class Program
         s_serviceCollection.AddLogging(configure => configure.AddSerilog());
 
         s_serviceCollection.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(DomainAssemblyReference.Assembly));
-        
+
         s_serviceCollection.AddGitServices();
 
         #region Verbs
 
         s_serviceCollection
             .AddTransient<CommitCsvVerb>()
+            .AddTransient<CorrelationVerb>()
             ;
 
         #endregion

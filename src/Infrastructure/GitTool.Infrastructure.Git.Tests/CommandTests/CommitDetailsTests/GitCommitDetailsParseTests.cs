@@ -52,11 +52,6 @@ namespace GitTool.Infrastructure.Git.Tests.CommandTests.CommitDetailsParseTests
             string authorEmail)
         {
             var gitCommitDetails = FindGitCommitDetailsByShaId(fileName, shaId);
-
-            var author = gitCommitDetails.Headers["Author"];
-            
-            author.Should().Contain(authorName);
-            author.Should().Contain(authorEmail);
             
             gitCommitDetails.Author.Name.Should().Be(authorName);
             gitCommitDetails.Author.Email.Should().Be(authorEmail);
@@ -76,13 +71,8 @@ namespace GitTool.Infrastructure.Git.Tests.CommandTests.CommitDetailsParseTests
 
             var gitCommitDetails = FindGitCommitDetailsByShaId(fileName, shaId);
 
-            var commitDate = gitCommitDetails.Headers["Date"];
             var parsedDate = DateTimeOffset.ParseExact(dateString, DateFormatStrings, CultureInfo.InvariantCulture);
             
-            commitDate
-                .Should()
-                .BeEquivalentTo(dateString);
-
             gitCommitDetails.Date.Should().Be(parsedDate);
         }
 

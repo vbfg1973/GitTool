@@ -48,8 +48,6 @@ namespace GitTool.Infrastructure.Git.Commands.CommitDetails
                 // Header lines - author, date, merge, etc
                 if (line.TryParseHeader(out var headerName, out var headerValue))
                 {
-                    commit?.Headers.Add(headerName, headerValue);
-
                     switch (headerName)
                     {
                         case "Date":
@@ -57,6 +55,9 @@ namespace GitTool.Infrastructure.Git.Commands.CommitDetails
                             break;
                         case "Author":
                             commit!.Author = GitCommitHelpers.ParseAuthorDetails(headerValue);
+                            break;
+                        case "Merge":
+                            commit!.Merge = headerValue;
                             break;
                     }
                 }

@@ -1,4 +1,5 @@
-﻿using GitTool.Infrastructure.Git;
+﻿using GitTool.Domain.Helpers;
+using GitTool.Infrastructure.Git;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -18,17 +19,13 @@ namespace GitTool.Domain.Features.Repositories.Commands.CommitFileCorrelation
 
         public async Task Handle(GenerateFileChangeCorrelation request, CancellationToken cancellationToken)
         {
-            var dictionary = _gitService
-                .GetAllCommits(request.RepositoryPath)
-                .SelectMany(x => x.Files)
-                .Select(x => x.Path)
-                .GroupBy(x => x)
-                .ToDictionary(g => g.Key, g => g.Count());
+            var commits = _gitService.GetAllCommits(request.RepositoryPath);
 
-            foreach (var kvp in dictionary.OrderByDescending(d => d.Value))
-            {
-                Console.WriteLine($"{kvp.Key} {kvp.Value}");
-            }
+            var correlations = new Correlations();
+
+            foreach (var commit in commits) correlations.AddSet(commit.Files.Select(x => x.Path));
+
+            await CsvHelpers.WriteCsvAsync(correlations.CorrelationData(), request.CsvFile);
         }
     }
 }

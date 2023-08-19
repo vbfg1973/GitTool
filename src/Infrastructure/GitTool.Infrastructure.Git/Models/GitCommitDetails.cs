@@ -15,6 +15,4 @@
         public string Message { get; set; }
         public List<GitFileStatus> Files { get; set; }
     }
-
-    public record GitAuthor(string Name, string Email);
 }

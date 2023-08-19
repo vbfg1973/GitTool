@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Globalization;
+using FluentAssertions;
 using GitTool.Infrastructure.Git.Commands;
 using GitTool.Infrastructure.Git.Commands.CommitDetails;
 using GitTool.Infrastructure.Git.Models;
@@ -53,9 +54,12 @@ namespace GitTool.Infrastructure.Git.Tests.CommandTests.CommitDetailsParseTests
             var gitCommitDetails = FindGitCommitDetailsByShaId(fileName, shaId);
 
             var author = gitCommitDetails.Headers["Author"];
-
+            
             author.Should().Contain(authorName);
             author.Should().Contain(authorEmail);
+            
+            gitCommitDetails.Author.Name.Should().Be(authorName);
+            gitCommitDetails.Author.Email.Should().Be(authorEmail);
         }
 
         [Theory]
@@ -65,13 +69,21 @@ namespace GitTool.Infrastructure.Git.Tests.CommandTests.CommitDetailsParseTests
         [ClassData(typeof(RoslynAnalysersGitCommitDates))]
         public void Given_GitLog_Identified_By_ShaId_Date_Is_Correct(string fileName, string shaId, string dateString)
         {
+            var DateFormatStrings = new[]
+            {
+                "ddd MMM d HH:mm:ss yyyy K"
+            };
+
             var gitCommitDetails = FindGitCommitDetailsByShaId(fileName, shaId);
 
             var commitDate = gitCommitDetails.Headers["Date"];
-
+            var parsedDate = DateTimeOffset.ParseExact(dateString, DateFormatStrings, CultureInfo.InvariantCulture);
+            
             commitDate
                 .Should()
                 .BeEquivalentTo(dateString);
+
+            gitCommitDetails.Date.Should().Be(parsedDate);
         }
 
         [Theory]

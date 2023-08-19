@@ -47,7 +47,19 @@ namespace GitTool.Infrastructure.Git.Commands.CommitDetails
 
                 // Header lines - author, date, merge, etc
                 if (line.TryParseHeader(out var headerName, out var headerValue))
+                {
                     commit?.Headers.Add(headerName, headerValue);
+
+                    switch (headerName)
+                    {
+                        case "Date":
+                            commit!.Date = GitCommitHelpers.ParseDateTimeOffset(headerValue);
+                            break;
+                        case "Author":
+                            commit!.Author = GitCommitHelpers.ParseAuthorDetails(headerValue);
+                            break;
+                    }
+                }
 
                 // Commit messages
                 if (line.IsMessageLine())

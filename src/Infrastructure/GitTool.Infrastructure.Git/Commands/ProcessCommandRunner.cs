@@ -30,12 +30,15 @@ namespace GitTool.Infrastructure.Git.Commands
                 blockingCollection.Add(NormaliseLineEnding(ev.Data));
             };
 
-            process.Exited += (s, e) => { blockingCollection.CompleteAdding(); };
+            // process.Exited += (s, e) => { blockingCollection.CompleteAdding(); };
 
             process.Start();
             process.BeginOutputReadLine();
-            process.BeginErrorReadLine(); // Currently doing nowt with this
+            // process.BeginErrorReadLine(); // Currently doing nowt with this
 
+            process.WaitForExit();
+            blockingCollection.CompleteAdding();
+            
             return blockingCollection.GetConsumingEnumerable();
         }
 

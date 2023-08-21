@@ -1,4 +1,5 @@
-﻿using System.Configuration;
+﻿using System.Collections.Concurrent;
+using System.Configuration;
 using GitTool.Domain.Complexity;
 using GitTool.Domain.Helpers;
 using GitTool.Infrastructure.Git;
@@ -29,14 +30,21 @@ namespace GitTool.Domain.Features.Repositories.Commands.Complexity
             foreach (var commit in commits)
             {
                 count++;
-                foreach (var file in commit.Files.Where(x => x.ChangeKind != ChangeKind.Deleted))
+                ConcurrentBag<ComplexityDetail> details = new();
+                
+                Parallel.ForEach(commit.Files.Where(x => x.ChangeKind != ChangeKind.Deleted), file =>
                 {
                     var body = _gitService.CommitFileContent(repositoryPath, commit.Sha, file.Path);
 
                     var complexityAnalyser = new IndentationComplexityAnalyzer(body);
 
-                    yield return new ComplexityDetail(commit.Sha, file.Path, commit.Date.ToString("O"),
-                        complexityAnalyser.ComplexityScore);
+                    details.Add(new ComplexityDetail(commit.Sha, file.Path, commit.Date.ToString("O"),
+                        complexityAnalyser.ComplexityScore));
+                });
+
+                foreach (var d in details)
+                {
+                    yield return d;
                 }
 
                 Console.Error.Write(count + "\r");

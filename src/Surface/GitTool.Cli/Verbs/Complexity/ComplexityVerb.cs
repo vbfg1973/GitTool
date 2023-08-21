@@ -1,4 +1,4 @@
-﻿using GitTool.Domain.Features.Repositories.Commands.FileContent;
+﻿using GitTool.Domain.Features.Repositories.Commands.Complexity;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -17,7 +17,7 @@ namespace GitTool.Cli.Verbs.Complexity
 
         public async Task Run(ComplexityOptions options)
         {
-            await _mediator.Send(new ComplexityOverCommits(options.RepositoryPath, ""));
+            await _mediator.Send(new ComplexityOverCommits(options.RepositoryPath, options.CsvFile));
         }
     }
 }

@@ -10,14 +10,6 @@ namespace GitTool.Infrastructure.Git.Commands
     /// </summary>
     public sealed class ProcessCommandRunner : IProcessCommandRunner
     {
-        private readonly Process _process;
-
-        public ProcessCommandRunner()
-        {
-            _process = new Process();
-            _process.EnableRaisingEvents = true;
-        }
-
         /// <summary>
         ///     Run the process making output immediately available through a IEnumerable of strings. The caller is
         ///     responsible for parsing this into intended output
@@ -26,21 +18,23 @@ namespace GitTool.Infrastructure.Git.Commands
         /// <returns></returns>
         public IEnumerable<string> Runner(AbstractCommandLineArguments commandLineArguments)
         {
-            _process.StartInfo = BuildStartInfo(commandLineArguments);
+            var process = new Process();
+            process.EnableRaisingEvents = true;
+            process.StartInfo = BuildStartInfo(commandLineArguments);
 
             var blockingCollection = new BlockingCollection<string>();
 
-            _process.OutputDataReceived += (s, ev) =>
+            process.OutputDataReceived += (s, ev) =>
             {
                 if (string.IsNullOrWhiteSpace(ev.Data)) return;
                 blockingCollection.Add(NormaliseLineEnding(ev.Data));
             };
 
-            _process.Exited += (s, e) => { blockingCollection.CompleteAdding(); };
+            process.Exited += (s, e) => { blockingCollection.CompleteAdding(); };
 
-            _process.Start();
-            _process.BeginOutputReadLine();
-            _process.BeginErrorReadLine(); // Currently doing nowt with this
+            process.Start();
+            process.BeginOutputReadLine();
+            process.BeginErrorReadLine(); // Currently doing nowt with this
 
             return blockingCollection.GetConsumingEnumerable();
         }

@@ -5,5 +5,7 @@ namespace GitTool.Infrastructure.Git
     public interface IGitService
     {
         IEnumerable<GitCommitDetails> GetAllCommits(string repositoryPath);
+
+        string CommitFileContent(string repositoryPath, string sha, string filePath);
     }
 }

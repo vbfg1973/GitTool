@@ -1,5 +1,6 @@
 ﻿using CommandLine;
 using GitTool.Cli.Verbs.Commits;
+using GitTool.Cli.Verbs.Complexity;
 using GitTool.Cli.Verbs.Correlation;
 using GitTool.Domain;
 using GitTool.Infrastructure.Git;
@@ -30,7 +31,8 @@ internal static class Program
         Parser.Default
             .ParseArguments<
                 CommitCsvOptions, 
-                CorrelationOptions
+                CorrelationOptions,
+                ComplexityOptions
             >(args)
             .WithParsed<CommitCsvOptions>(options =>
             {
@@ -41,6 +43,12 @@ internal static class Program
             .WithParsed<CorrelationOptions>(options =>
             {
                 var verb = s_serviceProvider.GetService<CorrelationVerb>();
+
+                verb?.Run(options).Wait();
+            })
+            .WithParsed<ComplexityOptions>(options =>
+            {
+                var verb = s_serviceProvider.GetService<ComplexityVerb>();
 
                 verb?.Run(options).Wait();
             })
@@ -75,6 +83,7 @@ internal static class Program
         s_serviceCollection
             .AddTransient<CommitCsvVerb>()
             .AddTransient<CorrelationVerb>()
+            .AddTransient<ComplexityVerb>()
             ;
 
         #endregion

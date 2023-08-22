@@ -11,5 +11,7 @@ namespace GitTool.Infrastructure.Git
         string CommitFileContent(string repositoryPath, string sha, string filePath);
 
         GitCommitParents Parents(string repositoryPath, string sha);
+
+        IEnumerable<string> ReverseTopographicalShaIds(string repositoryPath);
     }
 }

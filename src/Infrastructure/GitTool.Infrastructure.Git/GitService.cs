@@ -3,6 +3,7 @@ using GitTool.Infrastructure.Git.Commands.CommitDetails;
 using GitTool.Infrastructure.Git.Commands.CommitFileContent;
 using GitTool.Infrastructure.Git.Commands.CommitFollowFile;
 using GitTool.Infrastructure.Git.Commands.CommitParents;
+using GitTool.Infrastructure.Git.Commands.CommitsReverseTopographical;
 using GitTool.Infrastructure.Git.Models;
 using GitTool.Infrastructure.Git.Parsers.GitLog;
 using Microsoft.Extensions.DependencyInjection;
@@ -52,6 +53,14 @@ namespace GitTool.Infrastructure.Git
                 new GitCommitParentsCommandRunner(_serviceProvider.GetService<IProcessCommandRunner>()!);
 
             return parentsCommandRunner.Run(sha, repositoryPath);
+        }
+        
+        public IEnumerable<string> ReverseTopographicalShaIds(string repositoryPath)
+        {
+            var parentsCommandRunner =
+                new GitCommitReverseTopographicalCommandRunner(_serviceProvider.GetService<IProcessCommandRunner>()!);
+
+            return parentsCommandRunner.Run(repositoryPath);
         }
     }
 }

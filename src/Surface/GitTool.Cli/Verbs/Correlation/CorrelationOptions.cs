@@ -5,7 +5,7 @@ namespace GitTool.Cli.Verbs.Correlation
 {
     [Verb("correlation")]
     // ReSharper disable once ClassNeverInstantiated.Global
-    public class CorrelationOptions : IRepositoryOptions, ICsvOptions
+    public sealed class CorrelationOptions : IRepositoryOptions, ICsvOptions
     {
         public string RepositoryPath { get; init; } = null!;
 

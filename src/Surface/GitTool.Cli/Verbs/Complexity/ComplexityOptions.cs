@@ -5,7 +5,7 @@ namespace GitTool.Cli.Verbs.Complexity
 {
     [Verb("complexity")]
     // ReSharper disable once ClassNeverInstantiated.Global
-    public class ComplexityOptions : IRepositoryOptions, ICsvOptions
+    public sealed class ComplexityOptions : IRepositoryOptions, ICsvOptions
     {
         public string RepositoryPath { get; init; } = null!;
 

@@ -5,7 +5,7 @@ namespace GitTool.Cli.Verbs.FollowFile
 {
     [Verb("follow")]
     // ReSharper disable once ClassNeverInstantiated.Global
-    public class FollowFileOptions : IRepositoryOptions, ICsvOptions
+    public sealed class FollowFileOptions : IRepositoryOptions, ICsvOptions
     {
         public string RepositoryPath { get; init; } = null!;
         public string CsvFile { get; init; } = null!;

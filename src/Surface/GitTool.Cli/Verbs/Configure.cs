@@ -1,6 +1,7 @@
 ﻿using GitTool.Cli.Verbs.Commits;
 using GitTool.Cli.Verbs.Complexity;
 using GitTool.Cli.Verbs.Correlation;
+using GitTool.Cli.Verbs.Count;
 using GitTool.Cli.Verbs.FollowFile;
 using GitTool.Cli.Verbs.Lineage;
 using GitTool.Cli.Verbs.ReverseTopographical;
@@ -19,6 +20,7 @@ namespace GitTool.Cli.Verbs
                 .AddTransient<FollowFileVerb>()
                 .AddTransient<LineageVerb>()
                 .AddTransient<ReverseTopographicalVerb>()
+                .AddTransient<CountVerb>()
                 ;
 
             return serviceCollection;

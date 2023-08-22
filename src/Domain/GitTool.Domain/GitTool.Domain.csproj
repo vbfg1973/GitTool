@@ -18,4 +18,8 @@
         <ProjectReference Include="..\GitTool.Domain.Complexity\GitTool.Domain.Complexity.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Features\Repositories\Commands\Lineage\" />
+    </ItemGroup>
+
 </Project>

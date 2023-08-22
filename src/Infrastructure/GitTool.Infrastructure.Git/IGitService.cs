@@ -9,5 +9,7 @@ namespace GitTool.Infrastructure.Git
         IEnumerable<GitCommitDetails> FollowFile(string repositoryPath, string filePath);
 
         string CommitFileContent(string repositoryPath, string sha, string filePath);
+
+        GitCommitParents Parents(string repositoryPath, string sha);
     }
 }

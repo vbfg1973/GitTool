@@ -2,6 +2,7 @@
 using GitTool.Infrastructure.Git.Commands.CommitDetails;
 using GitTool.Infrastructure.Git.Commands.CommitFileContent;
 using GitTool.Infrastructure.Git.Commands.CommitFollowFile;
+using GitTool.Infrastructure.Git.Commands.CommitParents;
 using GitTool.Infrastructure.Git.Models;
 using GitTool.Infrastructure.Git.Parsers.GitLog;
 using Microsoft.Extensions.DependencyInjection;
@@ -43,6 +44,14 @@ namespace GitTool.Infrastructure.Git
                     _serviceProvider.GetService<IProcessCommandRunner>()!);
 
             return followFileCommandRunner.Run(filePath, repositoryPath);
+        }
+
+        public GitCommitParents Parents(string repositoryPath, string sha)
+        {
+            var parentsCommandRunner =
+                new GitCommitParentsCommandRunner(_serviceProvider.GetService<IProcessCommandRunner>()!);
+
+            return parentsCommandRunner.Run(sha, repositoryPath);
         }
     }
 }

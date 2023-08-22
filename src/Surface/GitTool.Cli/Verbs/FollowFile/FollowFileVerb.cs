@@ -14,7 +14,7 @@ namespace GitTool.Cli.Verbs.FollowFile
 
         public async Task Run(FollowFileOptions options)
         {
-            await _mediator.Send(new FollowFileRequest(options.RepositoryPath, options.File, options.CsvFile));
+            await _mediator.Send(new FollowFileRequest(options.RepositoryPath, options.FileToTrack, options.CsvFile));
         }
     }
 }

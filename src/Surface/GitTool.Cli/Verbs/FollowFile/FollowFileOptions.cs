@@ -1,14 +1,15 @@
 using CommandLine;
+using GitTool.Cli.Verbs.Abstract;
 
 namespace GitTool.Cli.Verbs.FollowFile
 {
     [Verb("follow")]
     // ReSharper disable once ClassNeverInstantiated.Global
-    public class FollowFileOptions
+    public class FollowFileOptions : IRepositoryOptions, ICsvOptions
     {
-        [Option('p', nameof(RepositoryPath))] public string RepositoryPath { get; set; } = null!;
-
-        [Option('c', nameof(CsvFile))] public string CsvFile { get; set; } = null!;
-        [Option('f', nameof(File))] public string File { get; set; } = null!;
+        public string RepositoryPath { get; init; } = null!;
+        public string CsvFile { get; init; } = null!;
+        
+        [Option('f', nameof(FileToTrack), Required = true, HelpText = "The file to track through the git history")] public string FileToTrack { get; init; } = null!;
     }
 }

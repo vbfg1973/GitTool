@@ -5,11 +5,11 @@ using GitTool.Infrastructure.Git.Commands.CommitDetails;
 using GitTool.Infrastructure.Git.Models;
 using GitTool.Infrastructure.Git.Parsers.GitLog;
 using GitTool.Infrastructure.Git.Tests.CommandTests.Abstract;
-using GitTool.Infrastructure.Git.Tests.Helpers;
 using GitTool.Infrastructure.Git.Tests.CommandTests.CommitDetailsTests.Data.Authors;
 using GitTool.Infrastructure.Git.Tests.CommandTests.CommitDetailsTests.Data.Dates;
 using GitTool.Infrastructure.Git.Tests.CommandTests.CommitDetailsTests.Data.FileCount;
 using GitTool.Infrastructure.Git.Tests.CommandTests.CommitDetailsTests.Data.Messages;
+using GitTool.Infrastructure.Git.Tests.Helpers;
 
 namespace GitTool.Infrastructure.Git.Tests.CommandTests.CommitDetailsTests
 {

@@ -7,13 +7,13 @@ namespace GitTool.Infrastructure.Git.Parsers.GitLog
 {
     public class GitLogParser : IGitLogParser
     {
-        private bool _currentlyProcessingMessageBody;
-        private StringBuilder _messageBuilder = new();
-
         private readonly string[] DateFormatStrings =
         {
             "ddd MMM d HH:mm:ss yyyy K"
         };
+
+        private bool _currentlyProcessingMessageBody;
+        private StringBuilder _messageBuilder = new();
 
 
         public GitLogParser()
@@ -55,7 +55,7 @@ namespace GitTool.Infrastructure.Git.Parsers.GitLog
             if (line.TryParseFileStatusLine(out var changeKind, out var currentPath, out var oldPath))
                 commit?.Files.Add(new GitFileStatus(changeKind, currentPath, oldPath));
         }
-        
+
         #region Headers
 
         /// <summary>

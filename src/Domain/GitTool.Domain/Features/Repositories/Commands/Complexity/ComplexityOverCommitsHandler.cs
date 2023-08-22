@@ -1,5 +1,4 @@
 ﻿using System.Collections.Concurrent;
-using System.Configuration;
 using GitTool.Domain.Complexity;
 using GitTool.Domain.Helpers;
 using GitTool.Infrastructure.Git;
@@ -16,7 +15,7 @@ namespace GitTool.Domain.Features.Repositories.Commands.Complexity
         {
             _gitService = gitService;
         }
-        
+
         public async Task Handle(ComplexityOverCommits request, CancellationToken cancellationToken)
         {
             var commits = _gitService.GetAllCommits(request.RepositoryPath);
@@ -24,14 +23,15 @@ namespace GitTool.Domain.Features.Repositories.Commands.Complexity
             await CsvHelpers.WriteCsvAsync(ComplexityDetails(request.RepositoryPath, commits), request.CsvFile);
         }
 
-        private IEnumerable<ComplexityDetail> ComplexityDetails(string repositoryPath, IEnumerable<GitCommitDetails> commits)
+        private IEnumerable<ComplexityDetail> ComplexityDetails(string repositoryPath,
+            IEnumerable<GitCommitDetails> commits)
         {
             var count = 0;
             foreach (var commit in commits)
             {
                 count++;
                 ConcurrentBag<ComplexityDetail> details = new();
-                
+
                 Parallel.ForEach(commit.Files.Where(x => x.ChangeKind != ChangeKind.Deleted), file =>
                 {
                     var body = _gitService.CommitFileContent(repositoryPath, commit.Sha, file.Path);
@@ -42,10 +42,7 @@ namespace GitTool.Domain.Features.Repositories.Commands.Complexity
                         complexityAnalyser.ComplexityScore));
                 });
 
-                foreach (var d in details)
-                {
-                    yield return d;
-                }
+                foreach (var d in details) yield return d;
 
                 Console.Error.Write(count + "\r");
             }

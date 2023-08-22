@@ -1,7 +1,6 @@
 ﻿using System.Collections.Immutable;
 using GitTool.Infrastructure.Git.Commands.Abstract;
 using GitTool.Infrastructure.Git.Models;
-using GitTool.Infrastructure.Git.Parsers;
 using GitTool.Infrastructure.Git.Parsers.GitLog;
 
 namespace GitTool.Infrastructure.Git.Commands.CommitDetails
@@ -28,7 +27,7 @@ namespace GitTool.Infrastructure.Git.Commands.CommitDetails
         /// <returns></returns>
         public IEnumerable<GitCommitDetails> Run(string path = ".")
         {
-            var arguments = new GitCommitDetailsCommandRunner.CommitDetailsGitCommandLineArguments(path);
+            var arguments = new CommitDetailsGitCommandLineArguments(path);
             path = GitCommitHelpers.CurrentWorkingDirectoryOrNominatedPath(path);
 
             var lines = _commandRunner.Runner(arguments);

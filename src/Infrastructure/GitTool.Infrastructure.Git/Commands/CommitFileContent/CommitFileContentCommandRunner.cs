@@ -15,9 +15,11 @@ namespace GitTool.Infrastructure.Git.Commands.CommitFileContent
         public string Run(string sha, string filePath, string path = ".")
         {
             path = GitCommitHelpers.CurrentWorkingDirectoryOrNominatedPath(path);
-            return string.Join("\n", _processCommandRunner.Runner(new CommitFileContentGitCommandLineArguments(path, sha, filePath)).ToList());
+            return string.Join("\n",
+                _processCommandRunner.Runner(new CommitFileContentGitCommandLineArguments(path, sha, filePath))
+                    .ToList());
         }
-        
+
         private record CommitFileContentGitCommandLineArguments : AbstractGitCommandLineArguments
         {
             public CommitFileContentGitCommandLineArguments(string path, string sha, string filePath)

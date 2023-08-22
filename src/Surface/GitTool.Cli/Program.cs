@@ -30,7 +30,7 @@ internal static class Program
     {
         Parser.Default
             .ParseArguments<
-                CommitCsvOptions, 
+                CommitCsvOptions,
                 CorrelationOptions,
                 ComplexityOptions
             >(args)

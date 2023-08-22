@@ -6,8 +6,8 @@ namespace GitTool.Cli.Verbs.Complexity
 {
     public class ComplexityVerb
     {
-        private readonly IMediator _mediator;
         private readonly ILogger<ComplexityVerb> _logger;
+        private readonly IMediator _mediator;
 
         public ComplexityVerb(IMediator mediator, ILogger<ComplexityVerb> logger)
         {

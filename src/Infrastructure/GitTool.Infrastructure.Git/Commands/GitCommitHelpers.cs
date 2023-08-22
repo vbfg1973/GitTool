@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using GitTool.Infrastructure.Git.Models;
 
 namespace GitTool.Infrastructure.Git.Commands

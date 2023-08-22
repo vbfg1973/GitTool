@@ -38,7 +38,7 @@ namespace GitTool.Infrastructure.Git.Commands
 
             process.WaitForExit();
             blockingCollection.CompleteAdding();
-            
+
             return blockingCollection.GetConsumingEnumerable();
         }
 

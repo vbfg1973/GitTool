@@ -15,11 +15,6 @@ namespace GitTool.Infrastructure.Git.Commands
         private static readonly Regex RegexIsMessageLine = GenerateMessageMatchLineRegex();
         private static readonly Regex RegexIsHeaderLine = GenerateHeaderMatchLineRegex();
 
-        private static readonly string[] DateFormatStrings =
-        {
-            "ddd MMM d HH:mm:ss yyyy K"
-        };
-
         /// <summary>
         ///     Force line endings to be replaces by a newline, irrespective of the original type
         /// </summary>
@@ -75,34 +70,6 @@ namespace GitTool.Infrastructure.Git.Commands
             headerValue = string.Join(':', elements.Skip(1)).Trim();
 
             return true;
-        }
-
-        /// <summary>
-        ///     Parse the git date format
-        /// </summary>
-        /// <param name="dateTimeString"></param>
-        /// <returns></returns>
-        public static DateTimeOffset ParseDateTimeOffset(string dateTimeString)
-        {
-            return DateTimeOffset.ParseExact(dateTimeString, DateFormatStrings, CultureInfo.InvariantCulture);
-        }
-
-        /// <summary>
-        ///     Parse git author details
-        /// </summary>
-        /// <param name="authorHeader"></param>
-        /// <returns></returns>
-        public static GitAuthor ParseAuthorDetails(string authorHeader)
-        {
-            // Console.WriteLine(authorHeader);
-
-            var firstIndex = authorHeader.IndexOf('<');
-
-            return new GitAuthor(
-                authorHeader.Substring(0, firstIndex > 0 ? firstIndex - 1 : firstIndex),
-                authorHeader.Substring(
-                    firstIndex + 1,
-                    authorHeader.IndexOf('>') - (firstIndex + 1)));
         }
 
         /// <summary>

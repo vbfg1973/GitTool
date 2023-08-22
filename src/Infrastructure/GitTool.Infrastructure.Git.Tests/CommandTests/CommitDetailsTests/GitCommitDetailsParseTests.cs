@@ -3,14 +3,15 @@ using FluentAssertions;
 using GitTool.Infrastructure.Git.Commands;
 using GitTool.Infrastructure.Git.Commands.CommitDetails;
 using GitTool.Infrastructure.Git.Models;
+using GitTool.Infrastructure.Git.Parsers.GitLog;
 using GitTool.Infrastructure.Git.Tests.CommandTests.Abstract;
 using GitTool.Infrastructure.Git.Tests.Helpers;
-using SilkHat.Infrastructure.Git.Tests.CommandTests.GitCommitDetailsTests.Data.Authors;
-using SilkHat.Infrastructure.Git.Tests.CommandTests.GitCommitDetailsTests.Data.Dates;
-using SilkHat.Infrastructure.Git.Tests.CommandTests.GitCommitDetailsTests.Data.FileCount;
-using SilkHat.Infrastructure.Git.Tests.CommandTests.GitCommitDetailsTests.Data.Messages;
+using GitTool.Infrastructure.Git.Tests.CommandTests.CommitDetailsTests.Data.Authors;
+using GitTool.Infrastructure.Git.Tests.CommandTests.CommitDetailsTests.Data.Dates;
+using GitTool.Infrastructure.Git.Tests.CommandTests.CommitDetailsTests.Data.FileCount;
+using GitTool.Infrastructure.Git.Tests.CommandTests.CommitDetailsTests.Data.Messages;
 
-namespace GitTool.Infrastructure.Git.Tests.CommandTests.CommitDetailsParseTests
+namespace GitTool.Infrastructure.Git.Tests.CommandTests.CommitDetailsTests
 {
     public class GitCommitDetailsParseTests : BaseCommandTests
     {
@@ -32,7 +33,8 @@ namespace GitTool.Infrastructure.Git.Tests.CommandTests.CommitDetailsParseTests
         {
             var pathToLog = GetPathToTestResourceFile(fileName);
             IProcessCommandRunner processCommandRunner = new FileReaderProcessRunner(pathToLog);
-            var commandRunner = new GitCommitDetailsCommandRunner(processCommandRunner);
+            IGitLogParser gitLogParser = new GitLogParser();
+            var commandRunner = new GitCommitDetailsCommandRunner(gitLogParser, processCommandRunner);
 
             commandRunner
                 .Run()
@@ -113,7 +115,8 @@ namespace GitTool.Infrastructure.Git.Tests.CommandTests.CommitDetailsParseTests
         {
             var pathToLog = GetPathToTestResourceFile(fileName);
             IProcessCommandRunner processCommandRunner = new FileReaderProcessRunner(pathToLog);
-            var commandRunner = new GitCommitDetailsCommandRunner(processCommandRunner);
+            IGitLogParser gitLogParser = new GitLogParser();
+            var commandRunner = new GitCommitDetailsCommandRunner(gitLogParser, processCommandRunner);
 
             return commandRunner.Run().First(x => string.Equals(x.Sha, shaId));
         }

@@ -1,4 +1,5 @@
 ﻿using GitTool.Infrastructure.Git.Commands;
+using GitTool.Infrastructure.Git.Parsers.GitLog;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GitTool.Infrastructure.Git
@@ -9,6 +10,7 @@ namespace GitTool.Infrastructure.Git
         {
             serviceCollection.AddTransient<IProcessCommandRunner, ProcessCommandRunner>();
             serviceCollection.AddTransient<IGitService, GitService>();
+            serviceCollection.AddTransient<IGitLogParser, GitLogParser>();
 
             return serviceCollection;
         }

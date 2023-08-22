@@ -1,6 +1,6 @@
 using System.Collections;
 
-namespace SilkHat.Infrastructure.Git.Tests.CommandTests.GitCommitDetailsTests.Data.Authors
+namespace GitTool.Infrastructure.Git.Tests.CommandTests.CommitDetailsTests.Data.Authors
 {
     public class RoslynAnalysersGitCommitAuthors : IEnumerable<object[]>
     {

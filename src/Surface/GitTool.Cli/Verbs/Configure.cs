@@ -2,6 +2,8 @@
 using GitTool.Cli.Verbs.Complexity;
 using GitTool.Cli.Verbs.Correlation;
 using GitTool.Cli.Verbs.FollowFile;
+using GitTool.Cli.Verbs.Lineage;
+using GitTool.Cli.Verbs.ReverseTopographical;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GitTool.Cli.Verbs
@@ -15,6 +17,8 @@ namespace GitTool.Cli.Verbs
                 .AddTransient<CorrelationVerb>()
                 .AddTransient<ComplexityVerb>()
                 .AddTransient<FollowFileVerb>()
+                .AddTransient<LineageVerb>()
+                .AddTransient<ReverseTopographicalVerb>()
                 ;
 
             return serviceCollection;

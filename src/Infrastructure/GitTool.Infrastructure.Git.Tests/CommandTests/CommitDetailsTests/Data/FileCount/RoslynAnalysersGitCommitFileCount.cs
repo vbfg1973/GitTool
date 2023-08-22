@@ -1,6 +1,6 @@
 using System.Collections;
 
-namespace SilkHat.Infrastructure.Git.Tests.CommandTests.GitCommitDetailsTests.Data.FileCount
+namespace GitTool.Infrastructure.Git.Tests.CommandTests.CommitDetailsTests.Data.FileCount
 {
     public class RoslynAnalysersGitCommitFileCount : IEnumerable<object[]>
     {

@@ -2,6 +2,7 @@
 using GitTool.Infrastructure.Git.Commands.CommitDetails;
 using GitTool.Infrastructure.Git.Commands.CommitFileContent;
 using GitTool.Infrastructure.Git.Models;
+using GitTool.Infrastructure.Git.Parsers.GitLog;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GitTool.Infrastructure.Git
@@ -18,7 +19,9 @@ namespace GitTool.Infrastructure.Git
         public IEnumerable<GitCommitDetails> GetAllCommits(string repositoryPath)
         {
             var gitCommitDetailsCommandRunner =
-                new GitCommitDetailsCommandRunner(_serviceProvider.GetService<IProcessCommandRunner>()!);
+                new GitCommitDetailsCommandRunner(
+                    _serviceProvider.GetService<IGitLogParser>()!,
+                    _serviceProvider.GetService<IProcessCommandRunner>()!);
 
             return gitCommitDetailsCommandRunner.Run(repositoryPath);
         }

@@ -1,6 +1,6 @@
 using System.Collections;
 
-namespace SilkHat.Infrastructure.Git.Tests.CommandTests.GitCommitDetailsTests.Data.Messages
+namespace GitTool.Infrastructure.Git.Tests.CommandTests.CommitDetailsTests.Data.Messages
 {
     public class DotnetSdkGitCommitMessages : IEnumerable<object[]>
     {

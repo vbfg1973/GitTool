@@ -2,6 +2,7 @@
 using GitTool.Infrastructure.Git.Commands.Abstract;
 using GitTool.Infrastructure.Git.Models;
 using GitTool.Infrastructure.Git.Parsers;
+using GitTool.Infrastructure.Git.Parsers.GitLog;
 
 namespace GitTool.Infrastructure.Git.Commands.CommitDetails
 {
@@ -12,12 +13,12 @@ namespace GitTool.Infrastructure.Git.Commands.CommitDetails
     {
         private readonly IProcessCommandRunner _commandRunner;
 
-        private readonly GitLogParser _gitLogParser;
+        private readonly IGitLogParser _gitLogParser;
 
-        public GitCommitDetailsCommandRunner(IProcessCommandRunner commandRunner)
+        public GitCommitDetailsCommandRunner(IGitLogParser gitLogParser, IProcessCommandRunner commandRunner)
         {
             _commandRunner = commandRunner;
-            _gitLogParser = new GitLogParser();
+            _gitLogParser = gitLogParser;
         }
 
         /// <summary>

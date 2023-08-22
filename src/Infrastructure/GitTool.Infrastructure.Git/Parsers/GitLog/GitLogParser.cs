@@ -3,9 +3,9 @@ using System.Text;
 using GitTool.Infrastructure.Git.Commands;
 using GitTool.Infrastructure.Git.Models;
 
-namespace GitTool.Infrastructure.Git.Parsers
+namespace GitTool.Infrastructure.Git.Parsers.GitLog
 {
-    public class GitLogParser
+    public class GitLogParser : IGitLogParser
     {
         private bool _currentlyProcessingMessageBody;
         private StringBuilder _messageBuilder = new();
@@ -87,7 +87,7 @@ namespace GitTool.Infrastructure.Git.Parsers
         /// </summary>
         /// <param name="dateTimeString"></param>
         /// <returns></returns>
-        public DateTimeOffset ParseDateTimeOffset(string dateTimeString)
+        private DateTimeOffset ParseDateTimeOffset(string dateTimeString)
         {
             return DateTimeOffset.ParseExact(dateTimeString, DateFormatStrings, CultureInfo.InvariantCulture);
         }

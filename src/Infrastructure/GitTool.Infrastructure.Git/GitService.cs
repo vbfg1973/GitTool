@@ -1,6 +1,7 @@
 ﻿using GitTool.Infrastructure.Git.Commands;
 using GitTool.Infrastructure.Git.Commands.CommitDetails;
 using GitTool.Infrastructure.Git.Commands.CommitFileContent;
+using GitTool.Infrastructure.Git.Commands.CommitFollowFile;
 using GitTool.Infrastructure.Git.Models;
 using GitTool.Infrastructure.Git.Parsers.GitLog;
 using Microsoft.Extensions.DependencyInjection;
@@ -32,6 +33,16 @@ namespace GitTool.Infrastructure.Git
                 new CommitFileContentCommandRunner(_serviceProvider.GetService<IProcessCommandRunner>()!);
 
             return commitFileContentCommandRunner.Run(sha, filePath, repositoryPath);
+        }
+
+        public IEnumerable<GitCommitDetails> FollowFile(string repositoryPath, string filePath)
+        {
+            var followFileCommandRunner =
+                new CommitFollowFileCommandRunner(
+                    _serviceProvider.GetService<IGitLogParser>()!,
+                    _serviceProvider.GetService<IProcessCommandRunner>()!);
+
+            return followFileCommandRunner.Run(filePath, repositoryPath);
         }
     }
 }

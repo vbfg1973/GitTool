@@ -1,12 +1,14 @@
 ﻿using CommandLine;
+using GitTool.Cli.Verbs.Abstract;
 
 namespace GitTool.Cli.Verbs.Correlation
 {
     [Verb("correlation")]
-    public class CorrelationOptions
+    // ReSharper disable once ClassNeverInstantiated.Global
+    public class CorrelationOptions : IRepositoryOptions, ICsvOptions
     {
-        [Option('p', nameof(RepositoryPath))] public string RepositoryPath { get; set; } = null!;
+        public string RepositoryPath { get; init; } = null!;
 
-        [Option('c', nameof(CsvFile))] public string CsvFile { get; set; } = null!;
+        public string CsvFile { get; init; } = null!;
     }
 }

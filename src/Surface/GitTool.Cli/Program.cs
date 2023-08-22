@@ -1,7 +1,9 @@
 ﻿using CommandLine;
+using GitTool.Cli.Verbs;
 using GitTool.Cli.Verbs.Commits;
 using GitTool.Cli.Verbs.Complexity;
 using GitTool.Cli.Verbs.Correlation;
+using GitTool.Cli.Verbs.FollowFile;
 using GitTool.Domain;
 using GitTool.Infrastructure.Git;
 using Microsoft.Extensions.Configuration;
@@ -32,7 +34,8 @@ internal static class Program
             .ParseArguments<
                 CommitCsvOptions,
                 CorrelationOptions,
-                ComplexityOptions
+                ComplexityOptions,
+                FollowFileOptions
             >(args)
             .WithParsed<CommitCsvOptions>(options =>
             {
@@ -49,6 +52,12 @@ internal static class Program
             .WithParsed<ComplexityOptions>(options =>
             {
                 var verb = s_serviceProvider.GetService<ComplexityVerb>();
+
+                verb?.Run(options).Wait();
+            })
+            .WithParsed<FollowFileOptions>(options =>
+            {
+                var verb = s_serviceProvider.GetService<FollowFileVerb>();
 
                 verb?.Run(options).Wait();
             })
@@ -78,16 +87,8 @@ internal static class Program
 
         s_serviceCollection.AddGitServices();
 
-        #region Verbs
-
-        s_serviceCollection
-            .AddTransient<CommitCsvVerb>()
-            .AddTransient<CorrelationVerb>()
-            .AddTransient<ComplexityVerb>()
-            ;
-
-        #endregion
-
+        s_serviceCollection.ConfigureVerbs();
+        
         s_serviceProvider = s_serviceCollection.BuildServiceProvider();
     }
 }

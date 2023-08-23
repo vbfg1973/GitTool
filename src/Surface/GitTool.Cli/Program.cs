@@ -6,7 +6,7 @@ using GitTool.Cli.Verbs.Correlation;
 using GitTool.Cli.Verbs.Count;
 using GitTool.Cli.Verbs.FollowFile;
 using GitTool.Cli.Verbs.Lineage;
-using GitTool.Cli.Verbs.ReverseTopographical;
+using GitTool.Cli.Verbs.Reverse;
 using GitTool.Domain;
 using GitTool.Infrastructure.Git;
 using Microsoft.Extensions.Configuration;
@@ -40,7 +40,7 @@ internal static class Program
                 ComplexityOptions,
                 FollowFileOptions,
                 LineageOptions,
-                ReverseTopographicalOptions,
+                ReverseOptions,
                 CountOptions
             >(args)
             .WithParsed<CommitCsvOptions>(options =>
@@ -79,9 +79,9 @@ internal static class Program
 
                 verb?.Run(options).Wait();
             })
-            .WithParsed<ReverseTopographicalOptions>(options =>
+            .WithParsed<ReverseOptions>(options =>
             {
-                var verb = s_serviceProvider.GetService<ReverseTopographicalVerb>();
+                var verb = s_serviceProvider.GetService<ReverseVerb>();
 
                 verb?.Run(options).Wait();
             })

@@ -1,4 +1,4 @@
-using GitTool.Cli.Verbs.ReverseTopographical;
+using GitTool.Cli.Verbs.Reverse;
 using GitTool.Infrastructure.Git;
 
 namespace GitTool.Cli.Verbs.Count

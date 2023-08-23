@@ -12,7 +12,7 @@ namespace GitTool.Infrastructure.Git
 
         GitCommitParents Parents(string repositoryPath, string sha);
 
-        IEnumerable<string> ReverseTopographicalShaIds(string repositoryPath);
+        IEnumerable<string> ReverseShaIds(string repositoryPath);
         int CountCommits(string repositoryPath);
     }
 }

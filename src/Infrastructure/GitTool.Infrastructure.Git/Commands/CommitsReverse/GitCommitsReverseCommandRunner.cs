@@ -21,7 +21,7 @@ namespace GitTool.Infrastructure.Git.Commands.CommitsReverse
 
         private record CommitsReverseGitCommandLineArguments : AbstractGitCommandLineArguments
         {
-            public CommitsReverseGitCommandLineArguments(string path)
+            public CommitsReverseGitCommandLineArguments(string path, int n = int.MaxValue, int skip = 0)
             {
                 Arguments = new List<string>
                 {
@@ -29,6 +29,8 @@ namespace GitTool.Infrastructure.Git.Commands.CommitsReverse
                     $"--work-tree={path}",
                     "rev-list",
                     "--reverse",
+                    $"--skip={skip}",
+                    $"-n={n}",
                     "HEAD"
                 }.ToImmutableList();
             }

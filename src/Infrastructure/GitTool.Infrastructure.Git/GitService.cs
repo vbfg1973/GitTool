@@ -56,7 +56,7 @@ namespace GitTool.Infrastructure.Git
             return parentsCommandRunner.Run(sha, repositoryPath);
         }
         
-        public IEnumerable<string> ReverseTopographicalShaIds(string repositoryPath)
+        public IEnumerable<string> ReverseShaIds(string repositoryPath)
         {
             var parentsCommandRunner =
                 new GitCommitsReverseCommandRunner(_serviceProvider.GetService<IProcessCommandRunner>()!);

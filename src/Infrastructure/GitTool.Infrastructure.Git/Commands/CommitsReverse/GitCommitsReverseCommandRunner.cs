@@ -1,14 +1,13 @@
 ﻿using System.Collections.Immutable;
 using GitTool.Infrastructure.Git.Commands.Abstract;
-using GitTool.Infrastructure.Git.Models;
 
-namespace GitTool.Infrastructure.Git.Commands.CommitsReverseTopographical
+namespace GitTool.Infrastructure.Git.Commands.CommitsReverse
 {
-    public class GitCommitReverseTopographicalCommandRunner
+    public class GitCommitsReverseCommandRunner
     {
         private readonly IProcessCommandRunner _processCommandRunner;
 
-        public GitCommitReverseTopographicalCommandRunner(IProcessCommandRunner processCommandRunner)
+        public GitCommitsReverseCommandRunner(IProcessCommandRunner processCommandRunner)
         {
             _processCommandRunner = processCommandRunner;
         }
@@ -17,13 +16,12 @@ namespace GitTool.Infrastructure.Git.Commands.CommitsReverseTopographical
         {
             path = GitCommitHelpers.CurrentWorkingDirectoryOrNominatedPath(path);
 
-
-            return _processCommandRunner.Runner(new CommitsReverseTopographicalGitCommandLineArguments(path));
+            return _processCommandRunner.Runner(new CommitsReverseGitCommandLineArguments(path));
         }
 
-        private record CommitsReverseTopographicalGitCommandLineArguments : AbstractGitCommandLineArguments
+        private record CommitsReverseGitCommandLineArguments : AbstractGitCommandLineArguments
         {
-            public CommitsReverseTopographicalGitCommandLineArguments(string path)
+            public CommitsReverseGitCommandLineArguments(string path, int n = int.MaxValue, int skip = 0)
             {
                 Arguments = new List<string>
                 {
@@ -31,8 +29,8 @@ namespace GitTool.Infrastructure.Git.Commands.CommitsReverseTopographical
                     $"--work-tree={path}",
                     "rev-list",
                     "--reverse",
-                    "--topo-order",
-                    "--first-parent",
+                    $"--skip={skip}",
+                    $"-n={n}",
                     "HEAD"
                 }.ToImmutableList();
             }

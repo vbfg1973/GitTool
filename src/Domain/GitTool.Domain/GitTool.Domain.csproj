@@ -19,7 +19,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Features\Repositories\Commands\Lineage\" />
+      <Folder Include="Features\Repositories\" />
     </ItemGroup>
 
 </Project>

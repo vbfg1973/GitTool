@@ -1,5 +1,5 @@
-using GitTool.Cli.Verbs.Reverse;
 using GitTool.Infrastructure.Git;
+using GitTool.Infrastructure.Git.ProcessRunner.Commands.Parameters;
 
 namespace GitTool.Cli.Verbs.Count
 {
@@ -12,9 +12,10 @@ namespace GitTool.Cli.Verbs.Count
             _gitService = gitService;
         }
 
-        public async Task Run(CountOptions options)
+        public async Task Run(CountOptions options, CancellationToken ctx)
         {
-            Console.WriteLine(_gitService.CountCommits(options.RepositoryPath));
+            var repoDetails = new RepositoryDetails(options.RepositoryPath);
+            Console.WriteLine(await _gitService.CountCommits(repoDetails, ctx));
         }
     }
 }

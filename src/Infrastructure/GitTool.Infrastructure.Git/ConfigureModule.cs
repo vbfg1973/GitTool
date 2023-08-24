@@ -1,5 +1,5 @@
-﻿using GitTool.Infrastructure.Git.Commands;
-using GitTool.Infrastructure.Git.Parsers.GitLog;
+﻿using GitTool.Infrastructure.Git.Parsers.GitLogParsers;
+using GitTool.Infrastructure.Git.ProcessRunner;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GitTool.Infrastructure.Git

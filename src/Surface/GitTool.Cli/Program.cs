@@ -1,12 +1,6 @@
 ﻿using CommandLine;
 using GitTool.Cli.Verbs;
-using GitTool.Cli.Verbs.Commits;
-using GitTool.Cli.Verbs.Complexity;
-using GitTool.Cli.Verbs.Correlation;
 using GitTool.Cli.Verbs.Count;
-using GitTool.Cli.Verbs.FollowFile;
-using GitTool.Cli.Verbs.Lineage;
-using GitTool.Cli.Verbs.Reverse;
 using GitTool.Domain;
 using GitTool.Infrastructure.Git;
 using Microsoft.Extensions.Configuration;
@@ -18,6 +12,7 @@ internal static class Program
     private static IConfiguration s_configuration;
     private static IServiceCollection s_serviceCollection;
     private static IServiceProvider s_serviceProvider;
+    private static readonly CancellationTokenSource canTokenSource = new CancellationTokenSource();
 
     internal static void Main(string[] args)
     {
@@ -28,6 +23,13 @@ internal static class Program
             .CreateLogger();
         ConfigureServices();
 
+        Console.CancelKeyPress += (sender, eventArgs) =>
+        {
+            Console.WriteLine("Cancel event triggered");
+            canTokenSource.Cancel();
+            eventArgs.Cancel = true;
+        };
+        
         ParseCommandLine(args);
     }
 
@@ -35,55 +37,13 @@ internal static class Program
     {
         Parser.Default
             .ParseArguments<
-                CommitCsvOptions,
-                CorrelationOptions,
-                ComplexityOptions,
-                FollowFileOptions,
-                LineageOptions,
-                ReverseOptions,
                 CountOptions
             >(args)
-            .WithParsed<CommitCsvOptions>(options =>
-            {
-                var verb = s_serviceProvider.GetService<CommitCsvVerb>();
-
-                verb?.Run(options).Wait();
-            })
-            .WithParsed<CorrelationOptions>(options =>
-            {
-                var verb = s_serviceProvider.GetService<CorrelationVerb>();
-
-                verb?.Run(options).Wait();
-            })
-            .WithParsed<ComplexityOptions>(options =>
-            {
-                var verb = s_serviceProvider.GetService<ComplexityVerb>();
-
-                verb?.Run(options).Wait();
-            })
             .WithParsed<CountOptions>(options =>
             {
                 var verb = s_serviceProvider.GetService<CountVerb>();
 
-                verb?.Run(options).Wait();
-            })
-            .WithParsed<FollowFileOptions>(options =>
-            {
-                var verb = s_serviceProvider.GetService<FollowFileVerb>();
-
-                verb?.Run(options).Wait();
-            })
-            .WithParsed<LineageOptions>(options =>
-            {
-                var verb = s_serviceProvider.GetService<LineageVerb>();
-
-                verb?.Run(options).Wait();
-            })
-            .WithParsed<ReverseOptions>(options =>
-            {
-                var verb = s_serviceProvider.GetService<ReverseVerb>();
-
-                verb?.Run(options).Wait();
+                verb?.Run(options, canTokenSource.Token).Wait();
             })
             ;
     }
@@ -112,7 +72,7 @@ internal static class Program
         s_serviceCollection.AddGitServices();
 
         s_serviceCollection.ConfigureVerbs();
-        
+
         s_serviceProvider = s_serviceCollection.BuildServiceProvider();
     }
 }

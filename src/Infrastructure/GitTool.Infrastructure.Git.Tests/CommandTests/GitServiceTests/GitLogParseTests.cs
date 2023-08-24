@@ -11,11 +11,11 @@ using GitTool.Infrastructure.Git.Tests.CommandTests.CommitDetailsTests.Data.File
 using GitTool.Infrastructure.Git.Tests.CommandTests.CommitDetailsTests.Data.Messages;
 using GitTool.Infrastructure.Git.Tests.Helpers;
 
-namespace GitTool.Infrastructure.Git.Tests.CommandTests.CommitDetailsTests
+namespace GitTool.Infrastructure.Git.Tests.CommandTests.GitServiceTests
 {
-    public class GitCommitDetailsParseTests : BaseCommandTests
+    public class GitLogParseTests : BaseCommandTests
     {
-        public GitCommitDetailsParseTests()
+        public GitLogParseTests()
         {
             DirPath = new List<string>
             {

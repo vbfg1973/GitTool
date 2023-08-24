@@ -1,74 +1,69 @@
-﻿using GitTool.Infrastructure.Git.Commands;
-using GitTool.Infrastructure.Git.Commands.CommitDetails;
-using GitTool.Infrastructure.Git.Commands.CommitFileContent;
-using GitTool.Infrastructure.Git.Commands.CommitFollowFile;
-using GitTool.Infrastructure.Git.Commands.CommitParents;
-using GitTool.Infrastructure.Git.Commands.CommitsCount;
-using GitTool.Infrastructure.Git.Commands.CommitsReverse;
+﻿using System.Runtime.CompilerServices;
 using GitTool.Infrastructure.Git.Models;
-using GitTool.Infrastructure.Git.Parsers.GitLog;
-using Microsoft.Extensions.DependencyInjection;
+using GitTool.Infrastructure.Git.Parsers.GitLogParsers;
+using GitTool.Infrastructure.Git.ProcessRunner;
+using GitTool.Infrastructure.Git.ProcessRunner.Commands;
+using GitTool.Infrastructure.Git.ProcessRunner.Commands.Parameters;
 
 namespace GitTool.Infrastructure.Git
 {
+    public interface IGitService
+    {
+        Task<int> CountCommits(RepositoryDetails repositoryDetails, CancellationToken ctx);
+
+        IAsyncEnumerable<GitLog> GetLogs(RepositoryDetails repositoryDetails, GitPageParameters pageParameters,
+            CancellationToken ctx);
+
+        IAsyncEnumerable<GitLog> GetLogsWithFiles(RepositoryDetails repositoryDetails, GitPageParameters pageParameters,
+            CancellationToken ctx);
+    }
+
     public class GitService : IGitService
     {
-        private readonly IServiceProvider _serviceProvider;
+        private readonly IGitLogParser _gitLogParser;
+        private readonly IProcessCommandRunner _processCommandRunner;
 
-        public GitService(IServiceProvider serviceProvider)
+        public GitService(IProcessCommandRunner processCommandRunner,
+            IGitLogParser gitLogParser)
         {
-            _serviceProvider = serviceProvider;
+            _processCommandRunner = processCommandRunner;
+            _gitLogParser = gitLogParser;
         }
 
-        public IEnumerable<GitCommitDetails> GetAllCommits(string repositoryPath)
+        public async Task<int> CountCommits(RepositoryDetails repositoryDetails, CancellationToken ctx)
         {
-            var gitCommitDetailsCommandRunner =
-                new GitCommitDetailsCommandRunner(
-                    _serviceProvider.GetService<IGitLogParser>()!,
-                    _serviceProvider.GetService<IProcessCommandRunner>()!);
+            var processRunnerResult =
+                await _processCommandRunner.RunAsync(new GitCommitCount(repositoryDetails),
+                    ctx);
 
-            return gitCommitDetailsCommandRunner.Run(repositoryPath);
+            return processRunnerResult.IsSuccessful ? Convert.ToInt32(processRunnerResult.StandardOut) : 0;
         }
 
-        public string CommitFileContent(string repositoryPath, string sha, string filePath)
+        public async IAsyncEnumerable<GitLog> GetLogs(RepositoryDetails repositoryDetails,
+            GitPageParameters pageParameters,
+            [EnumeratorCancellation] CancellationToken ctx)
         {
-            var commitFileContentCommandRunner =
-                new CommitFileContentCommandRunner(_serviceProvider.GetService<IProcessCommandRunner>()!);
+            var processRunnerResult =
+                await _processCommandRunner.RunAsync(
+                    new GitLogBasicPaging(repositoryDetails, new GitPaging(pageParameters.Take, pageParameters.Skip)),
+                    ctx);
 
-            return commitFileContentCommandRunner.Run(sha, filePath, repositoryPath);
+            if (!processRunnerResult.IsSuccessful) yield break;
+
+            foreach (var gitLog in _gitLogParser.Parse(processRunnerResult.StandardOut)) yield return gitLog;
         }
 
-        public IEnumerable<GitCommitDetails> FollowFile(string repositoryPath, string filePath)
+        public async IAsyncEnumerable<GitLog> GetLogsWithFiles(RepositoryDetails repositoryDetails,
+            GitPageParameters pageParameters, [EnumeratorCancellation] CancellationToken ctx)
         {
-            var followFileCommandRunner =
-                new CommitFollowFileCommandRunner(
-                    _serviceProvider.GetService<IGitLogParser>()!,
-                    _serviceProvider.GetService<IProcessCommandRunner>()!);
+            var processRunnerResult =
+                await _processCommandRunner.RunAsync(
+                    new GitLogBasicPaging(repositoryDetails, new GitPaging(pageParameters.Take, pageParameters.Skip),
+                        true), ctx);
 
-            return followFileCommandRunner.Run(filePath, repositoryPath);
-        }
+            if (!processRunnerResult.IsSuccessful) yield break;
 
-        public GitCommitParents Parents(string repositoryPath, string sha)
-        {
-            var parentsCommandRunner =
-                new GitCommitParentsCommandRunner(_serviceProvider.GetService<IProcessCommandRunner>()!);
-
-            return parentsCommandRunner.Run(sha, repositoryPath);
-        }
-        
-        public IEnumerable<string> ReverseShaIds(string repositoryPath)
-        {
-            var parentsCommandRunner =
-                new GitCommitsReverseCommandRunner(_serviceProvider.GetService<IProcessCommandRunner>()!);
-
-            return parentsCommandRunner.Run(repositoryPath);
-        }
-
-        public int CountCommits(string repositoryPath)
-        {
-            var parentsCommandRunner =
-                new GitCommitsCountCommandRunner(_serviceProvider.GetService<IProcessCommandRunner>()!);
-            return parentsCommandRunner.Run(repositoryPath);
+            foreach (var gitLog in _gitLogParser.Parse(processRunnerResult.StandardOut)) yield return gitLog;
         }
     }
 }

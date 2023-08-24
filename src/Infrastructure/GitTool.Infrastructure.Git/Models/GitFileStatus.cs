@@ -1,4 +1,4 @@
-﻿namespace GitTool.Infrastructure.Git.Models
+namespace GitTool.Infrastructure.Git.Models
 {
     /// <summary>
     ///     The status of the file in the current commit

@@ -1,4 +1,4 @@
-﻿namespace GitTool.Infrastructure.Git.Models
+namespace GitTool.Infrastructure.Git.Models
 {
     public record GitAuthor(string Name, string Email);
 }

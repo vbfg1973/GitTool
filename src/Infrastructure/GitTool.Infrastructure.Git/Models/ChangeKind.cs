@@ -1,4 +1,4 @@
-﻿namespace GitTool.Infrastructure.Git.Models
+namespace GitTool.Infrastructure.Git.Models
 {
     /// <summary>
     ///     The kinds of changes a diff can report

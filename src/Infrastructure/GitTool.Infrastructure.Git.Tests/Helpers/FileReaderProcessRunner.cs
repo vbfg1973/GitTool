@@ -1,5 +1,5 @@
-﻿using GitTool.Infrastructure.Git.Commands;
-using GitTool.Infrastructure.Git.Commands.Abstract;
+﻿using GitTool.Infrastructure.Git.ProcessRunner;
+using GitTool.Infrastructure.Git.ProcessRunner.Commands.Abstract;
 
 namespace GitTool.Infrastructure.Git.Tests.Helpers
 {
@@ -15,14 +15,16 @@ namespace GitTool.Infrastructure.Git.Tests.Helpers
             _path = path;
         }
 
-        public IEnumerable<string> Runner(AbstractCommandLineArguments commandLineArguments)
+        public async Task<ProcessCommandRunnerResult> RunAsync(GitProcessCommandLineArguments commandLineArguments,
+            CancellationToken ctx)
         {
-            return File.ReadLines(_path).Select(NormaliseLineEndings);
+            var fileText = await File.ReadAllTextAsync(_path, ctx);
+            return new ProcessCommandRunnerResult(NormaliseLineEndings(fileText), string.Empty, true);
         }
 
         private static string NormaliseLineEndings(string str)
         {
-            return str.Replace("\\r", "");
+            return str.ReplaceLineEndings("\n");
         }
     }
 }

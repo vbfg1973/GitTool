@@ -1,6 +1,6 @@
 using CommandLine;
 
-namespace GitTool.Cli.Verbs.Abstract
+namespace GitTool.Cli.Verbs.Options.Abstract
 {
     public interface ICsvOptions
     {

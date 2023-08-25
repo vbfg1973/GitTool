@@ -11,5 +11,12 @@ namespace GitTool.Domain.Helpers
             await using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
             await csv.WriteRecordsAsync(records);
         }
+
+        public static async Task WriteCsvAsync<T>(IAsyncEnumerable<T> records, string path)
+        {
+            await using var writer = new StreamWriter(path);
+            await using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
+            await csv.WriteRecordsAsync(records);
+        }
     }
 }

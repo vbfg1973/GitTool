@@ -10,7 +10,7 @@ namespace GitTool.Infrastructure.Git.ProcessRunner.Commands
         public GitLogBasicPaging
         (
             RepositoryDetails repositoryDetails,
-            GitPaging gitPaging,
+            GitPageParameters gitPaging,
             bool includeFiles = false
         ) :
             base(repositoryDetails, gitPaging)

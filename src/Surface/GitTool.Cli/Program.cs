@@ -1,5 +1,6 @@
 ﻿using CommandLine;
 using GitTool.Cli.Verbs;
+using GitTool.Cli.Verbs.Commits;
 using GitTool.Cli.Verbs.Count;
 using GitTool.Domain;
 using GitTool.Infrastructure.Git;
@@ -7,72 +8,82 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 
-internal static class Program
+namespace GitTool.Cli
 {
-    private static IConfiguration s_configuration;
-    private static IServiceCollection s_serviceCollection;
-    private static IServiceProvider s_serviceProvider;
-    private static readonly CancellationTokenSource canTokenSource = new CancellationTokenSource();
-
-    internal static void Main(string[] args)
+    internal static class Program
     {
-        BuildConfiguration();
-        Log.Logger = new LoggerConfiguration()
-            .ReadFrom
-            .Configuration(s_configuration)
-            .CreateLogger();
-        ConfigureServices();
+        private static IConfiguration _sConfiguration = null!;
+        private static IServiceCollection _sServiceCollection = null!;
+        private static IServiceProvider _sServiceProvider = null!;
+        private static readonly CancellationTokenSource CanTokenSource = new CancellationTokenSource();
 
-        Console.CancelKeyPress += (sender, eventArgs) =>
+        internal static void Main(string[] args)
         {
-            Console.WriteLine("Cancel event triggered");
-            canTokenSource.Cancel();
-            eventArgs.Cancel = true;
-        };
-        
-        ParseCommandLine(args);
-    }
+            BuildConfiguration();
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom
+                .Configuration(_sConfiguration)
+                .CreateLogger();
+            ConfigureServices();
 
-    private static void ParseCommandLine(string[] args)
-    {
-        Parser.Default
-            .ParseArguments<
-                CountOptions
-            >(args)
-            .WithParsed<CountOptions>(options =>
+            Console.CancelKeyPress += (sender, eventArgs) =>
             {
-                var verb = s_serviceProvider.GetService<CountVerb>();
+                Console.WriteLine("Cancel event triggered");
+                CanTokenSource.Cancel();
+                eventArgs.Cancel = true;
+            };
+        
+            ParseCommandLine(args);
+        }
 
-                verb?.Run(options, canTokenSource.Token).Wait();
-            })
-            ;
-    }
+        private static void ParseCommandLine(string[] args)
+        {
+            Parser.Default
+                .ParseArguments<
+                    CommitOptions,
+                    CountOptions
+                >(args)
+                .WithParsed<CountOptions>(options =>
+                {
+                    var verb = _sServiceProvider.GetService<CountVerb>();
 
-    private static void BuildConfiguration()
-    {
-        ConfigurationBuilder configuration = new();
+                    verb?.Run(options, CanTokenSource.Token).Wait();
+                })
+                .WithParsed<CommitOptions>(options =>
+                {
+                    var verb = _sServiceProvider.GetService<CommitVerb>();
 
-        s_configuration = configuration.AddJsonFile("appsettings.json", true, true)
-            // .AddJsonFile($"appsettings.{environmentName}.json", true, true)
-            .AddEnvironmentVariables()
-            .Build();
-    }
+                    verb?.Run(options, CanTokenSource.Token).Wait();
+                })
+                ;
+        }
 
-    private static void ConfigureServices()
-    {
-        s_serviceCollection = new ServiceCollection();
+        private static void BuildConfiguration()
+        {
+            ConfigurationBuilder configuration = new();
 
-        // var appSettings = new AppSettings();
-        // s_configuration.Bind("Settings", appSettings);
+            _sConfiguration = configuration.AddJsonFile("appsettings.json", true, true)
+                // .AddJsonFile($"appsettings.{environmentName}.json", true, true)
+                .AddEnvironmentVariables()
+                .Build();
+        }
 
-        s_serviceCollection.AddLogging(configure => configure.AddSerilog());
+        private static void ConfigureServices()
+        {
+            _sServiceCollection = new ServiceCollection();
 
-        s_serviceCollection.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(DomainAssemblyReference.Assembly));
+            // var appSettings = new AppSettings();
+            // s_configuration.Bind("Settings", appSettings);
 
-        s_serviceCollection.AddGitServices();
+            _sServiceCollection.AddLogging(configure => configure.AddSerilog());
 
-        s_serviceCollection.ConfigureVerbs();
+            _sServiceCollection.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(DomainAssemblyReference.Assembly));
 
-        s_serviceProvider = s_serviceCollection.BuildServiceProvider();
+            _sServiceCollection.AddGitServices();
+
+            _sServiceCollection.ConfigureVerbs();
+
+            _sServiceProvider = _sServiceCollection.BuildServiceProvider();
+        }
     }
 }

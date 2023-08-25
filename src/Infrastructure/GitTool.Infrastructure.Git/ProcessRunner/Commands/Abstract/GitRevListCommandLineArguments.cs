@@ -4,9 +4,9 @@ namespace GitTool.Infrastructure.Git.ProcessRunner.Commands.Abstract
 {
     public abstract class GitRevListCommandLineArguments : GitProcessCommandLineArguments
     {
-        protected GitRevListCommandLineArguments(RepositoryDetails repositoryDetails, GitPaging gitPaging) : base(
+        protected GitRevListCommandLineArguments(RepositoryDetails repositoryDetails, GitPageParameters pageParameters) : base(
             repositoryDetails,
-            gitPaging)
+            pageParameters)
         {
             Command = "rev-list";
         }

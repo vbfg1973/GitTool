@@ -7,19 +7,16 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="CommandLineParser" Version="2.9.1" />
-        <PackageReference Include="CsvHelper" Version="30.0.1" />
-        <PackageReference Include="MediatR" Version="12.1.1" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.1" />
+        <PackageReference Include="CommandLineParser" Version="2.9.1"/>
+        <PackageReference Include="CsvHelper" Version="30.0.1"/>
+        <PackageReference Include="MediatR" Version="12.1.1"/>
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.1"/>
+        <PackageReference Include="System.Interactive.Async" Version="6.0.1"/>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\Infrastructure\GitTool.Infrastructure.Git.Tests\GitTool.Infrastructure.Git.Tests.csproj" />
-        <ProjectReference Include="..\GitTool.Domain.Complexity\GitTool.Domain.Complexity.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Features\Repositories\" />
+        <ProjectReference Include="..\..\Infrastructure\GitTool.Infrastructure.Git.Tests\GitTool.Infrastructure.Git.Tests.csproj"/>
+        <ProjectReference Include="..\GitTool.Domain.Complexity\GitTool.Domain.Complexity.csproj"/>
     </ItemGroup>
 
 </Project>

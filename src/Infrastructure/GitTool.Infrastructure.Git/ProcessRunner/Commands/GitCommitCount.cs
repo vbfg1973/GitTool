@@ -5,7 +5,7 @@ namespace GitTool.Infrastructure.Git.ProcessRunner.Commands
 {
     public class GitCommitCount : GitRevListCommandLineArguments
     {
-        public GitCommitCount(RepositoryDetails repositoryDetails) : base(repositoryDetails, new GitPaging())
+        public GitCommitCount(RepositoryDetails repositoryDetails) : base(repositoryDetails, new GitPageParameters())
         {
         }
 

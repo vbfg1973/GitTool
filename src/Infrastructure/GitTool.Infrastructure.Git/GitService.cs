@@ -7,17 +7,6 @@ using GitTool.Infrastructure.Git.ProcessRunner.Commands.Parameters;
 
 namespace GitTool.Infrastructure.Git
 {
-    public interface IGitService
-    {
-        Task<int> CountCommits(RepositoryDetails repositoryDetails, CancellationToken ctx);
-
-        IAsyncEnumerable<GitLog> GetLogs(RepositoryDetails repositoryDetails, GitPageParameters pageParameters,
-            CancellationToken ctx);
-
-        IAsyncEnumerable<GitLog> GetLogsWithFiles(RepositoryDetails repositoryDetails, GitPageParameters pageParameters,
-            CancellationToken ctx);
-    }
-
     public class GitService : IGitService
     {
         private readonly IGitLogParser _gitLogParser;
@@ -43,10 +32,8 @@ namespace GitTool.Infrastructure.Git
             GitPageParameters pageParameters,
             [EnumeratorCancellation] CancellationToken ctx)
         {
-            var processRunnerResult =
-                await _processCommandRunner.RunAsync(
-                    new GitLogBasicPaging(repositoryDetails, new GitPaging(pageParameters.Take, pageParameters.Skip)),
-                    ctx);
+            var command = new GitLogBasicPaging(repositoryDetails, pageParameters, includeFiles: false);
+            var processRunnerResult = await _processCommandRunner.RunAsync(command, ctx);
 
             if (!processRunnerResult.IsSuccessful) yield break;
 
@@ -56,12 +43,15 @@ namespace GitTool.Infrastructure.Git
         public async IAsyncEnumerable<GitLog> GetLogsWithFiles(RepositoryDetails repositoryDetails,
             GitPageParameters pageParameters, [EnumeratorCancellation] CancellationToken ctx)
         {
-            var processRunnerResult =
-                await _processCommandRunner.RunAsync(
-                    new GitLogBasicPaging(repositoryDetails, new GitPaging(pageParameters.Take, pageParameters.Skip),
-                        true), ctx);
+            Console.WriteLine("Calling");
+            var command = new GitLogBasicPaging(repositoryDetails, pageParameters, includeFiles: true);
+            var processRunnerResult = await _processCommandRunner.RunAsync(command, ctx);
 
-            if (!processRunnerResult.IsSuccessful) yield break;
+            if (!processRunnerResult.IsSuccessful)
+            {
+                Console.WriteLine("Failed");
+                yield break;
+            }
 
             foreach (var gitLog in _gitLogParser.Parse(processRunnerResult.StandardOut)) yield return gitLog;
         }

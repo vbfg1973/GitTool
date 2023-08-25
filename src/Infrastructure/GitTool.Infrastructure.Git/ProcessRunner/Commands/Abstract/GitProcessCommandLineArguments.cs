@@ -4,13 +4,13 @@ namespace GitTool.Infrastructure.Git.ProcessRunner.Commands.Abstract
 {
     public abstract class GitProcessCommandLineArguments
     {
-        private readonly GitPaging _gitPaging;
+        private readonly GitPageParameters _pageParameters;
         private readonly RepositoryDetails _repositoryDetails;
 
-        protected GitProcessCommandLineArguments(RepositoryDetails repositoryDetails, GitPaging gitPaging)
+        protected GitProcessCommandLineArguments(RepositoryDetails repositoryDetails, GitPageParameters pageParameters)
         {
             _repositoryDetails = repositoryDetails;
-            _gitPaging = gitPaging;
+            _pageParameters = pageParameters;
             ProcessName = "git";
         }
 
@@ -20,7 +20,7 @@ namespace GitTool.Infrastructure.Git.ProcessRunner.Commands.Abstract
 
         private string Take(int n)
         {
-            return $"-n {_gitPaging.Take}";
+            return $"-n {_pageParameters.Take}";
         }
 
         private string Skip(int n)
@@ -54,10 +54,8 @@ namespace GitTool.Infrastructure.Git.ProcessRunner.Commands.Abstract
 
         protected IEnumerable<string> Paging()
         {
-            if (!_gitPaging.UsePaging) yield break;
-
-            yield return Take(_gitPaging.Take);
-            yield return Skip(_gitPaging.Skip);
+            yield return Take(_pageParameters.Take);
+            yield return Skip(_pageParameters.Skip);
         }
 
         public abstract IEnumerable<string> Arguments();

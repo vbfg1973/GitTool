@@ -4,7 +4,7 @@ namespace GitTool.Infrastructure.Git.ProcessRunner.Commands.Abstract
 {
     public abstract class GitLogCommandLineArguments : GitProcessCommandLineArguments
     {
-        protected GitLogCommandLineArguments(RepositoryDetails repositoryDetails, GitPaging gitPaging) : base(
+        protected GitLogCommandLineArguments(RepositoryDetails repositoryDetails, GitPageParameters gitPaging) : base(
             repositoryDetails,
             gitPaging)
         {

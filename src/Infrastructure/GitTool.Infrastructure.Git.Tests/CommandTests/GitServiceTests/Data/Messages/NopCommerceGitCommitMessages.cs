@@ -1,6 +1,6 @@
 using System.Collections;
 
-namespace GitTool.Infrastructure.Git.Tests.CommandTests.CommitDetailsTests.Data.Messages
+namespace GitTool.Infrastructure.Git.Tests.CommandTests.GitServiceTests.Data.Messages
 {
     public class NopCommerceGitCommitMessages : IEnumerable<object[]>
     {

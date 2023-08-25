@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 
-namespace GitTool.Infrastructure.Git.Tests.CommandTests.CommitDetailsTests.Data.FileCount
+namespace GitTool.Infrastructure.Git.Tests.CommandTests.GitServiceTests.Data.FileCount
 {
     public class LinuxGitCommitFileCount : IEnumerable<object[]>
     {

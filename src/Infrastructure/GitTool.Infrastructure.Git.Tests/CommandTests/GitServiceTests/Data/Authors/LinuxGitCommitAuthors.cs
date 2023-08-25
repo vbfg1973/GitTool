@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 
-namespace GitTool.Infrastructure.Git.Tests.CommandTests.CommitDetailsTests.Data.Authors
+namespace GitTool.Infrastructure.Git.Tests.CommandTests.GitServiceTests.Data.Authors
 {
     public class LinuxGitCommitAuthors : IEnumerable<object[]>
     {

@@ -24,7 +24,7 @@ namespace GitTool.Infrastructure.Git.Tests.Helpers
 
         private static string NormaliseLineEndings(string str)
         {
-            return str.ReplaceLineEndings("\n");
+            return str.Replace("\r", "").ReplaceLineEndings("\n");
         }
     }
 }

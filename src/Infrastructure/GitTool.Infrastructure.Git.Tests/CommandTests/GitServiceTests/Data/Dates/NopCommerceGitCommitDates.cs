@@ -1,6 +1,6 @@
 using System.Collections;
 
-namespace GitTool.Infrastructure.Git.Tests.CommandTests.CommitDetailsTests.Data.Dates
+namespace GitTool.Infrastructure.Git.Tests.CommandTests.GitServiceTests.Data.Dates
 {
     public class NopCommerceGitCommitDates : IEnumerable<object[]>
     {

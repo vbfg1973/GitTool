@@ -1,4 +1,5 @@
-﻿using GitTool.Domain.Helpers;
+﻿using GitTool.Domain.Features.Repositories.GitLogs.GetPage;
+using GitTool.Domain.Helpers;
 using GitTool.Infrastructure.Git;
 using GitTool.Infrastructure.Git.Models;
 using MediatR;
@@ -22,13 +23,14 @@ namespace GitTool.Domain.Features.Repositories.GitLogs.Csv
 
         public async Task Handle(SaveGitLogsToCsv request, CancellationToken cancellationToken)
         {
+            _logger.LogTrace("Saving git logs from {Repository} to {CsvFile}", request.RepositoryDetails.RepositoryPath, request.CsvFile);
+            
             var commitCount = await _gitService.CountCommits(request.RepositoryDetails, cancellationToken);
+            
+            _logger.LogTrace("Commit count in {Repository} is {CommitCount}", request.RepositoryDetails.RepositoryPath, commitCount);
 
             await Console.Error.WriteLineAsync($"{commitCount}");
             
-            // const int pageSize = 5000;
-            // var pages = (commitCount + pageSize - 1) / pageSize;
-
             var gitLogPageRequest = new GetGitLogPage(request.RepositoryDetails,
                 new GitPageParameters() { Page = 1, PageSize = commitCount });
             

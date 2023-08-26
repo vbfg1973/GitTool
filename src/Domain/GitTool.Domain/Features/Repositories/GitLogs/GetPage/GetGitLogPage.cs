@@ -3,7 +3,7 @@ using GitTool.Infrastructure.Git.Models;
 using GitTool.Infrastructure.Git.ProcessRunner.Commands.Parameters;
 using MediatR;
 
-namespace GitTool.Domain.Features.Repositories.GitLogs
+namespace GitTool.Domain.Features.Repositories.GitLogs.GetPage
 {
     // ReSharper disable once ClassNeverInstantiated.Global
     public class GetGitLogPage : IStreamRequest<GitLog>

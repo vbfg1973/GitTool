@@ -2,7 +2,7 @@
 using GitTool.Infrastructure.Git.Models;
 using MediatR;
 
-namespace GitTool.Domain.Features.Repositories.GitLogs
+namespace GitTool.Domain.Features.Repositories.GitLogs.GetPage
 {
     public class GetGitLogPageHandler : IStreamRequestHandler<GetGitLogPage, GitLog>
     {

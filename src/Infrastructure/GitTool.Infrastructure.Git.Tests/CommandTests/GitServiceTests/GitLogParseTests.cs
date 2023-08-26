@@ -111,8 +111,10 @@ namespace GitTool.Infrastructure.Git.Tests.CommandTests.GitServiceTests
         {
             var gitCommitDetails = await FindGitCommitDetailsByShaId(fileName, shaId);
 
-            gitCommitDetails
+            string.Join("", gitCommitDetails
                 .Message
+                .Split("\n")
+                .Select(x => x.TrimEnd()))
                 .Length
                 .Should()
                 .Be(messageBodySize);

@@ -1,6 +1,7 @@
 ﻿using CommandLine;
 using GitTool.Cli.Verbs;
 using GitTool.Cli.Verbs.Commits;
+using GitTool.Cli.Verbs.CoOccurrence;
 using GitTool.Cli.Verbs.Count;
 using GitTool.Domain;
 using GitTool.Infrastructure.Git;
@@ -41,7 +42,8 @@ namespace GitTool.Cli
             Parser.Default
                 .ParseArguments<
                     CommitOptions,
-                    CountOptions
+                    CountOptions,
+                    CoOccurrenceOptions
                 >(args)
                 .WithParsed<CountOptions>(options =>
                 {
@@ -52,6 +54,12 @@ namespace GitTool.Cli
                 .WithParsed<CommitOptions>(options =>
                 {
                     var verb = _sServiceProvider.GetService<CommitVerb>();
+
+                    verb?.Run(options, CanTokenSource.Token).Wait();
+                })
+                .WithParsed<CoOccurrenceOptions>(options =>
+                {
+                    var verb = _sServiceProvider.GetService<CoOccurrenceVerb>();
 
                     verb?.Run(options, CanTokenSource.Token).Wait();
                 })

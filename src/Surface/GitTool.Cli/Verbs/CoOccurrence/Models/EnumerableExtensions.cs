@@ -1,4 +1,4 @@
-﻿namespace GitTool.Cli.Verbs.CoOccurrence
+﻿namespace GitTool.Cli.Verbs.CoOccurrence.Models
 {
     public static class EnumerableExtensions
     {

@@ -1,6 +1,4 @@
-﻿using System.Text;
-
-namespace GitTool.Cli.Verbs.CoOccurrence
+﻿namespace GitTool.Cli.Verbs.CoOccurrence.Models
 {
     public record CoOccurrence(string FileName, string AssociatedFilename, int CommitCount, int Count)
     {

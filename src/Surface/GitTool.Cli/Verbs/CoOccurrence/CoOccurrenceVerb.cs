@@ -1,4 +1,5 @@
-﻿using GitTool.Domain.Helpers;
+﻿using GitTool.Cli.Verbs.CoOccurrence.Services;
+using GitTool.Domain.Helpers;
 using GitTool.Infrastructure.Git;
 using GitTool.Infrastructure.Git.ProcessRunner.Commands.Parameters;
 

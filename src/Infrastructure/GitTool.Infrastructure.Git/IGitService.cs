@@ -1,4 +1,5 @@
-﻿using GitTool.Infrastructure.Git.Models;
+﻿using System.Runtime.CompilerServices;
+using GitTool.Infrastructure.Git.Models;
 using GitTool.Infrastructure.Git.ProcessRunner.Commands.Parameters;
 
 namespace GitTool.Infrastructure.Git
@@ -12,5 +13,7 @@ namespace GitTool.Infrastructure.Git
 
         IAsyncEnumerable<GitLog> GetLogsWithFiles(RepositoryDetails repositoryDetails, GitPageParameters pageParameters,
             CancellationToken ctx);
+
+        IAsyncEnumerable<GitCommitLineage> GetLineage(RepositoryDetails repositoryDetails, CancellationToken ctx);
     }
 }

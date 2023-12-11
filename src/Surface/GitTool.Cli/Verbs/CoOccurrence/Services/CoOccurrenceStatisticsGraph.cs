@@ -2,7 +2,7 @@
 using GitTool.Infrastructure.Git.Models;
 using QuickGraph;
 
-namespace GitTool.Cli.Verbs.CoOccurrence
+namespace GitTool.Cli.Verbs.CoOccurrence.Services
 {
     public class CoOccurrenceStatisticsGraph : ICoOccurenceStatistics
     {
@@ -31,7 +31,7 @@ namespace GitTool.Cli.Verbs.CoOccurrence
             }
         }
 
-        public IEnumerable<CoOccurrence> CoOccurrences()
+        public IEnumerable<Models.CoOccurrence> CoOccurrences()
         {
             foreach (var v in _graph.Vertices)
             {
@@ -42,11 +42,11 @@ namespace GitTool.Cli.Verbs.CoOccurrence
             }
         }
 
-        public IEnumerable<CoOccurrence> CoOccurrencesByFile(string file)
+        public IEnumerable<Models.CoOccurrence> CoOccurrencesByFile(string file)
         {
             var occurrences = _graph.OutEdges(file)
                 .GroupBy(edge => edge.Target)
-                .Select(grouping => new CoOccurrence(file, grouping.Key, _fileCommitCounts[file], grouping.Count()));
+                .Select(grouping => new Models.CoOccurrence(file, grouping.Key, _fileCommitCounts[file], grouping.Count()));
 
             foreach (var occurrence in occurrences)
             {

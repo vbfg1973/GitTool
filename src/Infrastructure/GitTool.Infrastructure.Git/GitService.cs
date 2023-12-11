@@ -1,5 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using GitTool.Infrastructure.Git.Models;
+using GitTool.Infrastructure.Git.Parsers;
+using GitTool.Infrastructure.Git.Parsers.GitLineageParsers;
 using GitTool.Infrastructure.Git.Parsers.GitLogParsers;
 using GitTool.Infrastructure.Git.ProcessRunner;
 using GitTool.Infrastructure.Git.ProcessRunner.Commands;
@@ -10,13 +12,16 @@ namespace GitTool.Infrastructure.Git
     public class GitService : IGitService
     {
         private readonly IGitLogParser _gitLogParser;
+        private readonly IGitLineageParser _gitLineageParser;
         private readonly IProcessCommandRunner _processCommandRunner;
 
         public GitService(IProcessCommandRunner processCommandRunner,
-            IGitLogParser gitLogParser)
+            IGitLogParser gitLogParser,
+            IGitLineageParser gitLineageParser)
         {
             _processCommandRunner = processCommandRunner;
             _gitLogParser = gitLogParser;
+            _gitLineageParser = gitLineageParser;
         }
 
         public async Task<int> CountCommits(RepositoryDetails repositoryDetails, CancellationToken ctx)
@@ -38,6 +43,17 @@ namespace GitTool.Infrastructure.Git
             if (!processRunnerResult.IsSuccessful) yield break;
 
             foreach (var gitLog in _gitLogParser.Parse(processRunnerResult.StandardOut)) yield return gitLog;
+        }
+        
+        public async IAsyncEnumerable<GitCommitLineage> GetLineage(RepositoryDetails repositoryDetails,
+            [EnumeratorCancellation] CancellationToken ctx)
+        {
+            var command = new GitParentsCommand(repositoryDetails);
+            var processRunnerResult = await _processCommandRunner.RunAsync(command, ctx);
+
+            if (!processRunnerResult.IsSuccessful) yield break;
+
+            foreach (var gitLog in _gitLineageParser.Parse(processRunnerResult.StandardOut)) yield return gitLog;
         }
 
         public async IAsyncEnumerable<GitLog> GetLogsWithFiles(RepositoryDetails repositoryDetails,

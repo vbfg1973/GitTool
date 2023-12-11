@@ -1,6 +1,8 @@
 ﻿using System.Globalization;
 using FluentAssertions;
 using GitTool.Infrastructure.Git.Models;
+using GitTool.Infrastructure.Git.Parsers;
+using GitTool.Infrastructure.Git.Parsers.GitLineageParsers;
 using GitTool.Infrastructure.Git.Parsers.GitLogParsers;
 using GitTool.Infrastructure.Git.ProcessRunner;
 using GitTool.Infrastructure.Git.ProcessRunner.Commands.Parameters;
@@ -31,10 +33,7 @@ namespace GitTool.Infrastructure.Git.Tests.CommandTests.GitServiceTests
         [InlineData("roslyn-analyzers.txt", 789)]
         public async Task Given_GitLog_Number_Of_Commits_In_Log_Is_Correct(string fileName, int expectedCommitCount)
         {
-            var pathToLog = GetPathToTestResourceFile(fileName);
-            IProcessCommandRunner processCommandRunner = new FileReaderProcessRunner(pathToLog);
-            IGitLogParser gitLogParser = new GitLogParser();
-            var commandRunner = new GitService(processCommandRunner, gitLogParser);
+            var commandRunner = CommandRunner(fileName);
 
             var list = await commandRunner
                 .GetLogs(
@@ -46,6 +45,16 @@ namespace GitTool.Infrastructure.Git.Tests.CommandTests.GitServiceTests
                 .Count
                 .Should()
                 .Be(expectedCommitCount);
+        }
+
+        private GitService CommandRunner(string fileName)
+        {
+            var pathToLog = GetPathToTestResourceFile(fileName);
+            IProcessCommandRunner processCommandRunner = new FileReaderProcessRunner(pathToLog);
+            IGitLogParser gitLogParser = new GitLogParser();
+            IGitLineageParser gitLineageParser = new GitLineageParser();
+            var commandRunner = new GitService(processCommandRunner, gitLogParser, gitLineageParser);
+            return commandRunner;
         }
 
 
@@ -112,9 +121,9 @@ namespace GitTool.Infrastructure.Git.Tests.CommandTests.GitServiceTests
             var gitCommitDetails = await FindGitCommitDetailsByShaId(fileName, shaId);
 
             string.Join("", gitCommitDetails
-                .Message
-                .Split("\n")
-                .Select(x => x.TrimEnd()))
+                    .Message
+                    .Split("\n")
+                    .Select(x => x.TrimEnd()))
                 .Length
                 .Should()
                 .Be(messageBodySize);
@@ -122,10 +131,7 @@ namespace GitTool.Infrastructure.Git.Tests.CommandTests.GitServiceTests
 
         private async Task<GitLog> FindGitCommitDetailsByShaId(string fileName, string shaId)
         {
-            var pathToLog = GetPathToTestResourceFile(fileName);
-            IProcessCommandRunner processCommandRunner = new FileReaderProcessRunner(pathToLog);
-            IGitLogParser gitLogParser = new GitLogParser();
-            var commandRunner = new GitService(processCommandRunner, gitLogParser);
+            var commandRunner = CommandRunner(fileName);
 
             return await commandRunner
                 .GetLogs(

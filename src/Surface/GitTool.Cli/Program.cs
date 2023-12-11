@@ -3,6 +3,7 @@ using GitTool.Cli.Verbs;
 using GitTool.Cli.Verbs.Commits;
 using GitTool.Cli.Verbs.CoOccurrence;
 using GitTool.Cli.Verbs.Count;
+using GitTool.Cli.Verbs.Lineage;
 using GitTool.Domain;
 using GitTool.Infrastructure.Git;
 using Microsoft.Extensions.Configuration;
@@ -33,7 +34,7 @@ namespace GitTool.Cli
                 CanTokenSource.Cancel();
                 eventArgs.Cancel = true;
             };
-        
+
             ParseCommandLine(args);
         }
 
@@ -43,7 +44,8 @@ namespace GitTool.Cli
                 .ParseArguments<
                     CommitOptions,
                     CountOptions,
-                    CoOccurrenceOptions
+                    CoOccurrenceOptions,
+                    LineageOptions
                 >(args)
                 .WithParsed<CountOptions>(options =>
                 {
@@ -60,6 +62,12 @@ namespace GitTool.Cli
                 .WithParsed<CoOccurrenceOptions>(options =>
                 {
                     var verb = _sServiceProvider.GetService<CoOccurrenceVerb>();
+
+                    verb?.Run(options, CanTokenSource.Token).Wait();
+                })
+                .WithParsed<LineageOptions>(options =>
+                {
+                    var verb = _sServiceProvider.GetService<LineageVerb>();
 
                     verb?.Run(options, CanTokenSource.Token).Wait();
                 })

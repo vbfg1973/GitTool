@@ -35,20 +35,23 @@ namespace GitTool.Cli.Verbs.CoOccurrence
         {
             foreach (var v in _graph.Vertices)
             {
-                var occurrences = _graph.OutEdges(v)
-                    .GroupBy(edge => edge.Target)
-                    .Select(grouping => new CoOccurrence(v, grouping.Key, _fileCommitCounts[v], grouping.Count()));
-
-                foreach (var occurrence in occurrences)
+                foreach (var c in CoOccurrencesByFile(v))
                 {
-                    yield return occurrence;
+                    yield return c;
                 }
             }
         }
 
         public IEnumerable<CoOccurrence> CoOccurrencesByFile(string file)
         {
-            throw new NotImplementedException();
+            var occurrences = _graph.OutEdges(file)
+                .GroupBy(edge => edge.Target)
+                .Select(grouping => new CoOccurrence(file, grouping.Key, _fileCommitCounts[file], grouping.Count()));
+
+            foreach (var occurrence in occurrences)
+            {
+                yield return occurrence;
+            }
         }
 
         private static IEnumerable<Edge<string>> GetEdgesFromFiles(GitLog gitLog)

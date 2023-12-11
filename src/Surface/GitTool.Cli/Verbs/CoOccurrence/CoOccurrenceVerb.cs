@@ -24,7 +24,15 @@ namespace GitTool.Cli.Verbs.CoOccurrence
                 new GitPageParameters() { Page = 1, PageSize = commitCount }, token);
 
             var statistics = new CoOccurrenceStatisticsGraph();
-            var tasks = commits.Select(statistics.AddGitLog).ToEnumerable();
+            var filteredCommits = commits;
+
+            if (options.MaxFileCount > 0)
+            {
+                await Console.Error.WriteLineAsync($"Skipping commits of more than {options.MaxFileCount} files");
+                filteredCommits = filteredCommits.Where(x => x.Files.Count <= options.MaxFileCount);
+            }
+            
+            var tasks = filteredCommits.Select(statistics.AddGitLog).ToEnumerable();
 
             await Task.WhenAll(tasks);
 

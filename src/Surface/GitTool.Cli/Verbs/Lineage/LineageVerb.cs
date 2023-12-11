@@ -18,9 +18,15 @@ namespace GitTool.Cli.Verbs.Lineage
         {
             var details = new RepositoryDetails(options.RepositoryPath);
 
+            var gitLineage = new GitLineageService(_gitService);
+            await gitLineage.AddLineages(_gitService.GetLineage(details, ctx));
+
             await foreach (var gitCommitLineage in _gitService.GetLineage(details, ctx))
             {
                 Console.WriteLine(CommitLineageString(gitCommitLineage));
+                
+                Console.WriteLine(string.Join("\t\n", gitLineage.Parents(gitCommitLineage.Sha)));
+                Console.WriteLine();
             }
         }
 
@@ -29,10 +35,7 @@ namespace GitTool.Cli.Verbs.Lineage
             var sb = new StringBuilder();
             sb.AppendLine($"Id: {gitCommitLineage.Sha}");
 
-            foreach (var r in gitCommitLineage.Parents)
-            {
-                sb.AppendLine($"\tParent: {r}");
-            }
+            foreach (var r in gitCommitLineage.Parents) sb.AppendLine($"\tParent: {r}");
 
             sb.AppendLine();
 

@@ -1,4 +1,5 @@
 ﻿using GitTool.Cli.Verbs.Commits;
+using GitTool.Cli.Verbs.CoOccurrence;
 using GitTool.Cli.Verbs.Count;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -11,6 +12,7 @@ namespace GitTool.Cli.Verbs
             serviceCollection
                 .AddTransient<CommitVerb>()
                 .AddTransient<CountVerb>()
+                .AddTransient<CoOccurrenceVerb>()
                 ;
 
             return serviceCollection;

@@ -52,20 +52,17 @@ namespace CodeTool.Domain.Features.Repositories.GitLogs.Csv
 
         private IEnumerable<GitLogDto> Map(GitLog gitLog)
         {
-            foreach (var file in gitLog.Files)
+            return gitLog.Files.Select(file => new GitLogDto()
             {
-                yield return new GitLogDto()
-                {
-                    Sha = gitLog.Sha,
-                    Date = gitLog.Date.ToString("O"),
-                    Merge = gitLog.Merge,
-                    AuthorName = gitLog.Author.Name,
-                    AuthorEmail = gitLog.Author.Email,
-                    Path = file.Path,
-                    OldPath = file.OldPath,
-                    ChangeKind = file.ChangeKind.ToString()
-                };
-            }
+                Sha = gitLog.Sha,
+                Date = gitLog.Date.ToString("O"),
+                Merge = gitLog.Merge,
+                AuthorName = gitLog.Author.Name,
+                AuthorEmail = gitLog.Author.Email,
+                Path = file.Path,
+                OldPath = file.OldPath,
+                ChangeKind = file.ChangeKind.ToString()
+            });
         }
     }
 }

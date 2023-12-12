@@ -51,7 +51,7 @@ namespace CodeTool.Domain.Complexity
         /// </summary>
         /// <param name="lines"></param>
         /// <returns></returns>
-        private static string[] CleanLinesArray(string[] lines)
+        private static IEnumerable<string> CleanLinesArray(string[] lines)
         {
             return lines
                 .Where(str => !string.IsNullOrEmpty(str))

@@ -38,7 +38,7 @@ namespace CodeTool.Domain.Complexity.Tests
                 .Be(expectedComplexityScore);
         }
 
-        private string ReadWholeTestClass(string fileName)
+        private static string ReadWholeTestClass(string fileName)
         {
             return File.ReadAllText(Path.Combine("TestClasses", fileName));
         }

@@ -1,0 +1,430 @@
+diff --git a/.github/workflows/dotnet.yml b/.github/workflows/dotnet.yml
+index 9846eef..77f2f4b 100644
+--- a/.github/workflows/dotnet.yml
++++ b/.github/workflows/dotnet.yml
+@@ -21,8 +21,8 @@ jobs:
+         with:
+           dotnet-version: 6.0.x
+       - name: Restore dependencies
+-        run: dotnet restore src/GitApi.sln
++        run: dotnet restore src/CodeTool.sln
+       - name: Build
+-        run: dotnet build --no-restore src/GitApi.sln
++        run: dotnet build --no-restore src/CodeTool.sln
+       - name: Test
+-        run: dotnet test --no-build --verbosity normal src/GitApi.sln
++        run: dotnet test --no-build --verbosity normal src/CodeTool.sln
+diff --git a/src/CodeTool.Common.Tests/CodeTool.Common.Tests.csproj b/src/CodeTool.Common.Tests/CodeTool.Common.Tests.csproj
+new file mode 100644
+index 0000000..4ae26a4
+--- /dev/null
++++ b/src/CodeTool.Common.Tests/CodeTool.Common.Tests.csproj
+@@ -0,0 +1,30 @@
++<Project Sdk="Microsoft.NET.Sdk">
++
++    <PropertyGroup>
++        <TargetFramework>net7.0</TargetFramework>
++        <ImplicitUsings>enable</ImplicitUsings>
++        <Nullable>enable</Nullable>
++
++        <IsPackable>false</IsPackable>
++        <IsTestProject>true</IsTestProject>
++    </PropertyGroup>
++
++    <ItemGroup>
++        <PackageReference Include="FluentAssertions" Version="6.12.0" />
++        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
++        <PackageReference Include="xunit" Version="2.4.2" />
++        <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
++            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
++            <PrivateAssets>all</PrivateAssets>
++        </PackageReference>
++        <PackageReference Include="coverlet.collector" Version="3.2.0">
++            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
++            <PrivateAssets>all</PrivateAssets>
++        </PackageReference>
++    </ItemGroup>
++
++    <ItemGroup>
++      <ProjectReference Include="..\CodeTool.Common\CodeTool.Common.csproj" />
++    </ItemGroup>
++
++</Project>
+diff --git a/src/CodeTool.Common.Tests/Ranges/RangeTests.cs b/src/CodeTool.Common.Tests/Ranges/RangeTests.cs
+new file mode 100644
+index 0000000..a0c296b
+--- /dev/null
++++ b/src/CodeTool.Common.Tests/Ranges/RangeTests.cs
+@@ -0,0 +1,63 @@
++using CodeTool.Common.Ranges;
++using FluentAssertions;
++
++namespace CodeTool.Common.Tests.Ranges
++{
++    public class RangeTests
++    {
++        [Theory]
++        [InlineData(0, 10, 1, 2)]
++        [InlineData(0, 10, 1, 9)]
++        [InlineData(0, 10, 0, 9)]
++        [InlineData(0, 10, 1, 10)]
++        [InlineData(0, 10, 0, 10)]
++        public void ThisWrapsOther(int thisMin, int thisMax, int otherMin, int otherMax)
++        {
++            var thisRange = new Range<int>(thisMin, thisMax);
++            var otherRange = new Range<int>(otherMin, otherMax);
++
++            thisRange.Wraps(otherRange)
++                .Should()
++                .BeTrue();
++        }
++
++        [Theory]
++        [InlineData(0, 10, -1, 2)]
++        [InlineData(0, 10, 1, 11)]
++        [InlineData(0, 10, -1, 11)]
++        public void ThisDoesNotWrapOther(int thisMin, int thisMax, int otherMin, int otherMax)
++        {
++            var thisRange = new Range<int>(thisMin, thisMax);
++            var otherRange = new Range<int>(otherMin, otherMax);
++
++            thisRange.Wraps(otherRange)
++                .Should()
++                .BeFalse();
++        }
++
++        [Theory]
++        [InlineData(0, 10, 0)]
++        [InlineData(0, 10, 1)]
++        [InlineData(0, 10, 10)]
++        public void IsInside(int thisMin, int thisMax, int point)
++        {
++            var thisRange = new Range<int>(thisMin, thisMax);
++
++            thisRange.IsInside(point)
++                .Should()
++                .BeTrue();
++        }
++
++        [Theory]
++        [InlineData(0, 10, -1)]
++        [InlineData(0, 10, 11)]
++        public void IsNotInside(int thisMin, int thisMax, int point)
++        {
++            var thisRange = new Range<int>(thisMin, thisMax);
++
++            thisRange.IsInside(point)
++                .Should()
++                .BeFalse();
++        }
++    }
++}
+\ No newline at end of file
+diff --git a/src/CodeTool.Common.Tests/Usings.cs b/src/CodeTool.Common.Tests/Usings.cs
+new file mode 100644
+index 0000000..8c927eb
+--- /dev/null
++++ b/src/CodeTool.Common.Tests/Usings.cs
+@@ -0,0 +1 @@
++global using Xunit;
+\ No newline at end of file
+diff --git a/src/CodeTool.Common/CodeTool.Common.csproj b/src/CodeTool.Common/CodeTool.Common.csproj
+new file mode 100644
+index 0000000..6836c68
+--- /dev/null
++++ b/src/CodeTool.Common/CodeTool.Common.csproj
+@@ -0,0 +1,9 @@
++<Project Sdk="Microsoft.NET.Sdk">
++
++    <PropertyGroup>
++        <TargetFramework>net7.0</TargetFramework>
++        <ImplicitUsings>enable</ImplicitUsings>
++        <Nullable>enable</Nullable>
++    </PropertyGroup>
++
++</Project>
+diff --git a/src/CodeTool.Common/Ranges/IRange.cs b/src/CodeTool.Common/Ranges/IRange.cs
+new file mode 100644
+index 0000000..7b0f4fc
+--- /dev/null
++++ b/src/CodeTool.Common/Ranges/IRange.cs
+@@ -0,0 +1,12 @@
++﻿namespace CodeTool.Common.Ranges
++{
++    public interface IRange<T> where T : IComparable<T>
++    {
++        T Min { get; }
++        T Max { get; }
++        bool OverLaps(IRange<T> other);
++        bool Wraps(IRange<T> other);
++        bool IsWrappedBy(IRange<T> other);
++        bool IsInside(T point);
++    }
++}
+\ No newline at end of file
+diff --git a/src/CodeTool.Common/Ranges/Range.cs b/src/CodeTool.Common/Ranges/Range.cs
+new file mode 100644
+index 0000000..06f6834
+--- /dev/null
++++ b/src/CodeTool.Common/Ranges/Range.cs
+@@ -0,0 +1,37 @@
++﻿namespace CodeTool.Common.Ranges
++{
++    public class Range<T> : IRange<T> where T : IComparable<T>
++    {
++        public Range(T min, T max)
++        {
++            Min = min;
++            Max = max;
++        }
++
++        public T Min { get; }
++        public T Max { get; }
++
++        public bool IsInside(T point)
++        {
++            return point.CompareTo(Min) >= 0 &&
++                   point.CompareTo(Max) <= 0;
++        }
++
++        public bool OverLaps(IRange<T> other)
++        {
++            return IsInside(other.Min) ||
++                   IsInside(other.Max);
++        }
++
++        public bool Wraps(IRange<T> other)
++        {
++            return IsInside(other.Min) &&
++                   IsInside(other.Max);
++        }
++
++        public bool IsWrappedBy(IRange<T> other)
++        {
++            return other.Wraps(this);
++        }
++    }
++}
+\ No newline at end of file
+diff --git a/src/CodeTool.sln b/src/CodeTool.sln
+index 4180a77..f2e972d 100644
+--- a/src/CodeTool.sln
++++ b/src/CodeTool.sln
+@@ -27,6 +27,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeTool.Domain.Complexity"
+ EndProject
+ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeTool.Domain.Complexity.Tests", "Domain\CodeTool.Domain.Complexity.Tests\CodeTool.Domain.Complexity.Tests.csproj", "{D2875ECA-7DCC-4A5E-93E5-B8EC6F564797}"
+ EndProject
++Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{E515E878-0FA9-46FA-BB92-BB29FB73ADEB}"
++EndProject
++Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeTool.Common", "CodeTool.Common\CodeTool.Common.csproj", "{7288D9DD-E5C6-4245-B372-FF7CEC7A5699}"
++EndProject
++Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeTool.Common.Tests", "CodeTool.Common.Tests\CodeTool.Common.Tests.csproj", "{CC23A752-A282-4B48-B209-6FD3D9B6EC88}"
++EndProject
+ Global
+ 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+ 		Debug|Any CPU = Debug|Any CPU
+@@ -72,6 +78,14 @@ Global
+ 		{D2875ECA-7DCC-4A5E-93E5-B8EC6F564797}.Debug|Any CPU.Build.0 = Debug|Any CPU
+ 		{D2875ECA-7DCC-4A5E-93E5-B8EC6F564797}.Release|Any CPU.ActiveCfg = Release|Any CPU
+ 		{D2875ECA-7DCC-4A5E-93E5-B8EC6F564797}.Release|Any CPU.Build.0 = Release|Any CPU
++		{7288D9DD-E5C6-4245-B372-FF7CEC7A5699}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
++		{7288D9DD-E5C6-4245-B372-FF7CEC7A5699}.Debug|Any CPU.Build.0 = Debug|Any CPU
++		{7288D9DD-E5C6-4245-B372-FF7CEC7A5699}.Release|Any CPU.ActiveCfg = Release|Any CPU
++		{7288D9DD-E5C6-4245-B372-FF7CEC7A5699}.Release|Any CPU.Build.0 = Release|Any CPU
++		{CC23A752-A282-4B48-B209-6FD3D9B6EC88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
++		{CC23A752-A282-4B48-B209-6FD3D9B6EC88}.Debug|Any CPU.Build.0 = Debug|Any CPU
++		{CC23A752-A282-4B48-B209-6FD3D9B6EC88}.Release|Any CPU.ActiveCfg = Release|Any CPU
++		{CC23A752-A282-4B48-B209-6FD3D9B6EC88}.Release|Any CPU.Build.0 = Release|Any CPU
+ 	EndGlobalSection
+ 	GlobalSection(NestedProjects) = preSolution
+ 		{E85C2C6D-7397-4046-A7DC-811AD2115A10} = {FA9E82C5-25D4-48B3-87F5-D4BBA847F400}
+@@ -83,5 +97,7 @@ Global
+ 		{FC4717D9-5FF8-4C09-9142-D60709123FE9} = {52C5FEDA-B8EA-47C3-8937-51D514D1F997}
+ 		{221B9761-F780-4083-87A8-656CBC00F427} = {FA9E82C5-25D4-48B3-87F5-D4BBA847F400}
+ 		{D2875ECA-7DCC-4A5E-93E5-B8EC6F564797} = {FA9E82C5-25D4-48B3-87F5-D4BBA847F400}
++		{7288D9DD-E5C6-4245-B372-FF7CEC7A5699} = {E515E878-0FA9-46FA-BB92-BB29FB73ADEB}
++		{CC23A752-A282-4B48-B209-6FD3D9B6EC88} = {E515E878-0FA9-46FA-BB92-BB29FB73ADEB}
+ 	EndGlobalSection
+ EndGlobal
+diff --git a/src/Domain/CodeTool.Domain.Complexity.Tests/IndentationComplexityTests.cs b/src/Domain/CodeTool.Domain.Complexity.Tests/IndentationComplexityTests.cs
+index da93b1a..c4f6536 100644
+--- a/src/Domain/CodeTool.Domain.Complexity.Tests/IndentationComplexityTests.cs
++++ b/src/Domain/CodeTool.Domain.Complexity.Tests/IndentationComplexityTests.cs
+@@ -38,7 +38,7 @@ namespace CodeTool.Domain.Complexity.Tests
+                 .Be(expectedComplexityScore);
+         }
+ 
+-        private string ReadWholeTestClass(string fileName)
++        private static string ReadWholeTestClass(string fileName)
+         {
+             return File.ReadAllText(Path.Combine("TestClasses", fileName));
+         }
+diff --git a/src/Domain/CodeTool.Domain.Complexity/IndentationComplexityAnalyzer.cs b/src/Domain/CodeTool.Domain.Complexity/IndentationComplexityAnalyzer.cs
+index 39e5b3c..6b612d3 100644
+--- a/src/Domain/CodeTool.Domain.Complexity/IndentationComplexityAnalyzer.cs
++++ b/src/Domain/CodeTool.Domain.Complexity/IndentationComplexityAnalyzer.cs
+@@ -51,7 +51,7 @@ namespace CodeTool.Domain.Complexity
+         /// </summary>
+         /// <param name="lines"></param>
+         /// <returns></returns>
+-        private static string[] CleanLinesArray(string[] lines)
++        private static IEnumerable<string> CleanLinesArray(string[] lines)
+         {
+             return lines
+                 .Where(str => !string.IsNullOrEmpty(str))
+diff --git a/src/Domain/CodeTool.Domain/Features/Repositories/GitLogs/Csv/SaveGitLogsToCsvHandler.cs b/src/Domain/CodeTool.Domain/Features/Repositories/GitLogs/Csv/SaveGitLogsToCsvHandler.cs
+index 08fff68..46c42cd 100644
+--- a/src/Domain/CodeTool.Domain/Features/Repositories/GitLogs/Csv/SaveGitLogsToCsvHandler.cs
++++ b/src/Domain/CodeTool.Domain/Features/Repositories/GitLogs/Csv/SaveGitLogsToCsvHandler.cs
+@@ -52,20 +52,17 @@ namespace CodeTool.Domain.Features.Repositories.GitLogs.Csv
+ 
+         private IEnumerable<GitLogDto> Map(GitLog gitLog)
+         {
+-            foreach (var file in gitLog.Files)
++            return gitLog.Files.Select(file => new GitLogDto()
+             {
+-                yield return new GitLogDto()
+-                {
+-                    Sha = gitLog.Sha,
+-                    Date = gitLog.Date.ToString("O"),
+-                    Merge = gitLog.Merge,
+-                    AuthorName = gitLog.Author.Name,
+-                    AuthorEmail = gitLog.Author.Email,
+-                    Path = file.Path,
+-                    OldPath = file.OldPath,
+-                    ChangeKind = file.ChangeKind.ToString()
+-                };
+-            }
++                Sha = gitLog.Sha,
++                Date = gitLog.Date.ToString("O"),
++                Merge = gitLog.Merge,
++                AuthorName = gitLog.Author.Name,
++                AuthorEmail = gitLog.Author.Email,
++                Path = file.Path,
++                OldPath = file.OldPath,
++                ChangeKind = file.ChangeKind.ToString()
++            });
+         }
+     }
+ }
+\ No newline at end of file
+diff --git a/src/GitApi.sln.DotSettings b/src/GitApi.sln.DotSettings
+deleted file mode 100644
+index 06b71d5..0000000
+--- a/src/GitApi.sln.DotSettings
++++ /dev/null
+@@ -1,2 +0,0 @@
+-﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+-	<s:Boolean x:Key="/Default/CodeEditing/SuppressUninitializedWarningFix/Enabled/@EntryValue">False</s:Boolean></wpf:ResourceDictionary>
+\ No newline at end of file
+diff --git a/src/Infrastructure/CodeTool.Infrastructure.Git.Tests/Resources/DiffOutput/new_file_diff.txt b/src/Infrastructure/CodeTool.Infrastructure.Git.Tests/Resources/DiffOutput/new_file_diff.txt
+new file mode 100644
+index 0000000..20a0123
+--- /dev/null
++++ b/src/Infrastructure/CodeTool.Infrastructure.Git.Tests/Resources/DiffOutput/new_file_diff.txt
+@@ -0,0 +1,70 @@
++﻿diff --git a/src/CodeTool.Common.Tests/Ranges/RangeTests.cs b/src/CodeTool.Common.Tests/Ranges/RangeTests.cs
++new file mode 100644
++index 0000000..a0c296b
++--- /dev/null
+++++ b/src/CodeTool.Common.Tests/Ranges/RangeTests.cs
++@@ -0,0 +1,63 @@
+++using CodeTool.Common.Ranges;
+++using FluentAssertions;
+++
+++namespace CodeTool.Common.Tests.Ranges
+++{
+++    public class RangeTests
+++    {
+++        [Theory]
+++        [InlineData(0, 10, 1, 2)]
+++        [InlineData(0, 10, 1, 9)]
+++        [InlineData(0, 10, 0, 9)]
+++        [InlineData(0, 10, 1, 10)]
+++        [InlineData(0, 10, 0, 10)]
+++        public void ThisWrapsOther(int thisMin, int thisMax, int otherMin, int otherMax)
+++        {
+++            var thisRange = new Range<int>(thisMin, thisMax);
+++            var otherRange = new Range<int>(otherMin, otherMax);
+++
+++            thisRange.Wraps(otherRange)
+++                .Should()
+++                .BeTrue();
+++        }
+++
+++        [Theory]
+++        [InlineData(0, 10, -1, 2)]
+++        [InlineData(0, 10, 1, 11)]
+++        [InlineData(0, 10, -1, 11)]
+++        public void ThisDoesNotWrapOther(int thisMin, int thisMax, int otherMin, int otherMax)
+++        {
+++            var thisRange = new Range<int>(thisMin, thisMax);
+++            var otherRange = new Range<int>(otherMin, otherMax);
+++
+++            thisRange.Wraps(otherRange)
+++                .Should()
+++                .BeFalse();
+++        }
+++
+++        [Theory]
+++        [InlineData(0, 10, 0)]
+++        [InlineData(0, 10, 1)]
+++        [InlineData(0, 10, 10)]
+++        public void IsInside(int thisMin, int thisMax, int point)
+++        {
+++            var thisRange = new Range<int>(thisMin, thisMax);
+++
+++            thisRange.IsInside(point)
+++                .Should()
+++                .BeTrue();
+++        }
+++
+++        [Theory]
+++        [InlineData(0, 10, -1)]
+++        [InlineData(0, 10, 11)]
+++        public void IsNotInside(int thisMin, int thisMax, int point)
+++        {
+++            var thisRange = new Range<int>(thisMin, thisMax);
+++
+++            thisRange.IsInside(point)
+++                .Should()
+++                .BeFalse();
+++        }
+++    }
+++}
++\ No newline at end of file
+diff --git a/src/Infrastructure/CodeTool.Infrastructure.Git/Models/Diff/GitFileDiff.cs b/src/Infrastructure/CodeTool.Infrastructure.Git/Models/Diff/GitFileDiff.cs
+new file mode 100644
+index 0000000..3d43ed8
+--- /dev/null
++++ b/src/Infrastructure/CodeTool.Infrastructure.Git/Models/Diff/GitFileDiff.cs
+@@ -0,0 +1,4 @@
++﻿namespace CodeTool.Infrastructure.Git.Models.Diff
++{
++    public record GitFileDiff(string FromSha, string ToSha);
++}
+\ No newline at end of file
+diff --git a/src/Infrastructure/CodeTool.Infrastructure.Git/Models/CommitParents.cs b/src/Infrastructure/CodeTool.Infrastructure.Git/Models/Lineage/CommitParents.cs
+similarity index 100%
+rename from src/Infrastructure/CodeTool.Infrastructure.Git/Models/CommitParents.cs
+rename to src/Infrastructure/CodeTool.Infrastructure.Git/Models/Lineage/CommitParents.cs
+diff --git a/src/Infrastructure/CodeTool.Infrastructure.Git/Models/GitCommitLineage.cs b/src/Infrastructure/CodeTool.Infrastructure.Git/Models/Lineage/GitCommitLineage.cs
+similarity index 100%
+rename from src/Infrastructure/CodeTool.Infrastructure.Git/Models/GitCommitLineage.cs
+rename to src/Infrastructure/CodeTool.Infrastructure.Git/Models/Lineage/GitCommitLineage.cs
+diff --git a/src/Infrastructure/CodeTool.Infrastructure.Git/Models/ChangeKind.cs b/src/Infrastructure/CodeTool.Infrastructure.Git/Models/Logs/ChangeKind.cs
+similarity index 100%
+rename from src/Infrastructure/CodeTool.Infrastructure.Git/Models/ChangeKind.cs
+rename to src/Infrastructure/CodeTool.Infrastructure.Git/Models/Logs/ChangeKind.cs
+diff --git a/src/Infrastructure/CodeTool.Infrastructure.Git/Models/GitAuthor.cs b/src/Infrastructure/CodeTool.Infrastructure.Git/Models/Logs/GitAuthor.cs
+similarity index 100%
+rename from src/Infrastructure/CodeTool.Infrastructure.Git/Models/GitAuthor.cs
+rename to src/Infrastructure/CodeTool.Infrastructure.Git/Models/Logs/GitAuthor.cs
+diff --git a/src/Infrastructure/CodeTool.Infrastructure.Git/Models/GitFileStatus.cs b/src/Infrastructure/CodeTool.Infrastructure.Git/Models/Logs/GitFileStatus.cs
+similarity index 100%
+rename from src/Infrastructure/CodeTool.Infrastructure.Git/Models/GitFileStatus.cs
+rename to src/Infrastructure/CodeTool.Infrastructure.Git/Models/Logs/GitFileStatus.cs
+diff --git a/src/Infrastructure/CodeTool.Infrastructure.Git/Models/GitLog.cs b/src/Infrastructure/CodeTool.Infrastructure.Git/Models/Logs/GitLog.cs
+similarity index 100%
+rename from src/Infrastructure/CodeTool.Infrastructure.Git/Models/GitLog.cs
+rename to src/Infrastructure/CodeTool.Infrastructure.Git/Models/Logs/GitLog.cs

@@ -3,5 +3,5 @@ using CodeTool.Infrastructure.Git.Parsers.Abstract;
 
 namespace CodeTool.Infrastructure.Git.Parsers.GitLineageParsers
 {
-    public interface IGitLineageParser : IParser<GitCommitLineage> { }
+    public interface IGitLineageParserMultiple : IParserMultiple<GitCommitLineage> { }
 }

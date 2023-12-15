@@ -1,0 +1,16 @@
+﻿diff --git a/.github/workflows/dotnet.yml b/.github/workflows/dotnet.yml
+index 9846eef..77f2f4b 100644
+--- a/.github/workflows/dotnet.yml
++++ b/.github/workflows/dotnet.yml
+@@ -21,8 +21,8 @@ jobs:
+         with:
+           dotnet-version: 6.0.x
+       - name: Restore dependencies
+-        run: dotnet restore src/GitApi.sln
++        run: dotnet restore src/CodeTool.sln
+       - name: Build
+-        run: dotnet build --no-restore src/GitApi.sln
++        run: dotnet build --no-restore src/CodeTool.sln
+       - name: Test
+-        run: dotnet test --no-build --verbosity normal src/GitApi.sln
++        run: dotnet test --no-build --verbosity normal src/CodeTool.sln

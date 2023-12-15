@@ -3,8 +3,8 @@ using CodeTool.Infrastructure.Git.Parsers.Abstract;
 
 namespace CodeTool.Infrastructure.Git.Parsers.GitLogParsers
 {
-    public interface IGitLogParser : IParser<GitLog>
+    public interface IGitLogParserMultiple : IParserMultiple<GitLog>
     {
-        new IEnumerable<GitLog> Parse(string body);
+        IEnumerable<GitLog> Parse(string body);
     }
 }

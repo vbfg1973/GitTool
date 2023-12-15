@@ -12,8 +12,8 @@ namespace CodeTool.Infrastructure.Git
         {
             serviceCollection.AddTransient<IProcessCommandRunner, ProcessCommandRunner>();
             serviceCollection.AddTransient<IGitService, GitService>();
-            serviceCollection.AddTransient<IGitLogParser, GitLogParser>();
-            serviceCollection.AddTransient<IGitLineageParser, GitLineageParser>();
+            serviceCollection.AddTransient<IGitLogParserMultiple, GitLogParserMultiple>();
+            serviceCollection.AddTransient<IGitLineageParserMultiple, GitLineageParserMultiple>();
 
             return serviceCollection;
         }

@@ -2,7 +2,7 @@
 
 namespace CodeTool.Infrastructure.Git.Parsers.GitLineageParsers
 {
-    public class GitLineageParser : IGitLineageParser
+    public class GitLineageParserMultiple : IGitLineageParserMultiple
     {
         public IEnumerable<GitCommitLineage> Parse(string body)
         {

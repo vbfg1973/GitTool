@@ -3,7 +3,7 @@ using CodeTool.Infrastructure.Git.Parsers.GitLogParsers.Helpers;
 
 namespace CodeTool.Infrastructure.Git.Parsers.GitLogParsers
 {
-    public class GitLogParser : IGitLogParser
+    public class GitLogParserMultiple : IGitLogParserMultiple
     {
         private const string CommitHeader = "commit";
 
@@ -11,7 +11,7 @@ namespace CodeTool.Infrastructure.Git.Parsers.GitLogParsers
         private readonly GitLogHeaderParser _gitLogHeaderParser;
         private readonly GitLogMessageParser _gitLogMessageParser;
 
-        public GitLogParser()
+        public GitLogParserMultiple()
         {
             _gitLogHeaderParser = new GitLogHeaderParser();
             _gitLogMessageParser = new GitLogMessageParser();

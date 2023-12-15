@@ -51,9 +51,9 @@ namespace CodeTool.Infrastructure.Git.Tests.CommandTests.GitServiceTests
         {
             var pathToLog = GetPathToTestResourceFile(fileName);
             IProcessCommandRunner processCommandRunner = new FileReaderProcessRunner(pathToLog);
-            IGitLogParser gitLogParser = new GitLogParser();
-            IGitLineageParser gitLineageParser = new GitLineageParser();
-            var commandRunner = new GitService(processCommandRunner, gitLogParser, gitLineageParser);
+            IGitLogParserMultiple gitLogParserMultiple = new GitLogParserMultiple();
+            IGitLineageParserMultiple gitLineageParserMultiple = new GitLineageParserMultiple();
+            var commandRunner = new GitService(processCommandRunner, gitLogParserMultiple, gitLineageParserMultiple);
             return commandRunner;
         }
 

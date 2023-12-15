@@ -11,17 +11,17 @@ namespace CodeTool.Infrastructure.Git
 {
     public class GitService : IGitService
     {
-        private readonly IGitLogParser _gitLogParser;
-        private readonly IGitLineageParser _gitLineageParser;
+        private readonly IGitLogParserMultiple _gitLogParserMultiple;
+        private readonly IGitLineageParserMultiple _gitLineageParserMultiple;
         private readonly IProcessCommandRunner _processCommandRunner;
 
         public GitService(IProcessCommandRunner processCommandRunner,
-            IGitLogParser gitLogParser,
-            IGitLineageParser gitLineageParser)
+            IGitLogParserMultiple gitLogParserMultiple,
+            IGitLineageParserMultiple gitLineageParserMultiple)
         {
             _processCommandRunner = processCommandRunner;
-            _gitLogParser = gitLogParser;
-            _gitLineageParser = gitLineageParser;
+            _gitLogParserMultiple = gitLogParserMultiple;
+            _gitLineageParserMultiple = gitLineageParserMultiple;
         }
 
         public async Task<int> CountCommits(RepositoryDetails repositoryDetails, CancellationToken ctx)
@@ -42,7 +42,7 @@ namespace CodeTool.Infrastructure.Git
 
             if (!processRunnerResult.IsSuccessful) yield break;
 
-            foreach (var gitLog in _gitLogParser.Parse(processRunnerResult.StandardOut)) yield return gitLog;
+            foreach (var gitLog in _gitLogParserMultiple.Parse(processRunnerResult.StandardOut)) yield return gitLog;
         }
         
         public async IAsyncEnumerable<GitCommitLineage> GetLineage(RepositoryDetails repositoryDetails,
@@ -53,7 +53,7 @@ namespace CodeTool.Infrastructure.Git
 
             if (!processRunnerResult.IsSuccessful) yield break;
 
-            foreach (var gitLog in _gitLineageParser.Parse(processRunnerResult.StandardOut)) yield return gitLog;
+            foreach (var gitLog in _gitLineageParserMultiple.Parse(processRunnerResult.StandardOut)) yield return gitLog;
         }
 
         public async IAsyncEnumerable<GitLog> GetLogsWithFiles(RepositoryDetails repositoryDetails,
@@ -69,7 +69,7 @@ namespace CodeTool.Infrastructure.Git
                 yield break;
             }
 
-            foreach (var gitLog in _gitLogParser.Parse(processRunnerResult.StandardOut)) yield return gitLog;
+            foreach (var gitLog in _gitLogParserMultiple.Parse(processRunnerResult.StandardOut)) yield return gitLog;
         }
     }
 }
